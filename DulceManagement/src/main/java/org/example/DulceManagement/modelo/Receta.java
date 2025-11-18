@@ -2,7 +2,6 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-
 import org.openxava.annotations.*;
 
 @Entity
@@ -23,5 +22,37 @@ public class Receta {
     @Digits(integer = 10, fraction = 2)
     private double cantidadNecesaria;
 
-    // Getters y setters
+    // ===== GETTERS & SETTERS =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Ingrediente getIngrediente() {
+        return ingrediente;
+    }
+
+    public void setIngrediente(Ingrediente ingrediente) {
+        this.ingrediente = ingrediente;
+    }
+
+    public double getCantidadNecesaria() {
+        return cantidadNecesaria;
+    }
+
+    public void setCantidadNecesaria(double cantidadNecesaria) {
+        this.cantidadNecesaria = cantidadNecesaria;
+    }
 }

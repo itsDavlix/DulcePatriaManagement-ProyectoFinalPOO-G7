@@ -30,5 +30,45 @@ public class Reserva {
     @ListProperties("producto.nombre, cantidad, estadoStock")
     private Collection<DetalleReserva> detalles;
 
-    // Getters y setters
+    // ===== GETTERS Y SETTERS =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    public EstadoReserva getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoReserva estado) {
+        this.estado = estado;
+    }
+
+    public Collection<DetalleReserva> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(Collection<DetalleReserva> detalles) {
+        this.detalles = detalles;
+    }
 }

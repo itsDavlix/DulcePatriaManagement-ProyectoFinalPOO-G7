@@ -23,5 +23,43 @@ public class DetalleReserva {
     @Enumerated(EnumType.STRING)
     private EstadoStock estadoStock = EstadoStock.INCOMPLETO;
 
-    // Getters y setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public EstadoStock getEstadoStock() {
+        return estadoStock;
+    }
+
+    public void setEstadoStock(EstadoStock estadoStock) {
+        this.estadoStock = estadoStock;
+    }
 }
