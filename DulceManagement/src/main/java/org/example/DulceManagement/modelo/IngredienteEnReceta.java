@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.openxava.annotations.*;
 
 @Entity
-public class Pendiente {
+public class IngredienteEnReceta {
 
     @Id
     @Hidden
@@ -13,20 +13,16 @@ public class Pendiente {
     private Long id;
 
     @ManyToOne
+    @Required
+    private Receta receta;
+
+    @ManyToOne
+    @Required
     @DescriptionsList
     private Ingrediente ingrediente;
 
-    @Column(length = 100)
-    private String descripcion;
-
-    private BigDecimal cantidad;
-
-    @Column(length = 200)
-    private String notas;
-
     @Required
-    @Column(length = 15)
-    private String estado = "PENDIENTE";
+    private BigDecimal cantidad; // cantidad del ingrediente para 1 unidad de receta
 
     // Getters y Setters
 
@@ -37,6 +33,13 @@ public class Pendiente {
         this.id = id;
     }
 
+    public Receta getReceta() {
+        return receta;
+    }
+    public void setReceta(Receta receta) {
+        this.receta = receta;
+    }
+
     public Ingrediente getIngrediente() {
         return ingrediente;
     }
@@ -44,31 +47,10 @@ public class Pendiente {
         this.ingrediente = ingrediente;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public BigDecimal getCantidad() {
         return cantidad;
     }
     public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public String getNotas() {
-        return notas;
-    }
-    public void setNotas(String notas) {
-        this.notas = notas;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 }

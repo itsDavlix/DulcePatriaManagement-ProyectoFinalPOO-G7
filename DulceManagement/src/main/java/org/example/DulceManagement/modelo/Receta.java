@@ -1,58 +1,49 @@
 package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
+import java.util.*;
 import org.openxava.annotations.*;
 
 @Entity
-@View(members = "producto; ingrediente; cantidadNecesaria")
+@View(members =
+        "nombre;" +
+                "ingredientesEnReceta"
+)
 public class Receta {
 
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @Required
-    private Producto producto;
-
-    @ManyToOne @Required
-    private Ingrediente ingrediente;
-
     @Required
-    @Digits(integer = 10, fraction = 2)
-    private double cantidadNecesaria;
+    @Column(length = 80)
+    private String nombre;
 
-    // ===== GETTERS & SETTERS =====
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
+    @ListProperties("ingrediente.nombre, cantidad, ingrediente.unidadMedida")
+    private Collection<IngredienteEnReceta> ingredientesEnReceta;
+
+    // Getters y Setters
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public Collection<IngredienteEnReceta> getIngredientesEnReceta() {
+        return ingredientesEnReceta;
     }
-
-    public Ingrediente getIngrediente() {
-        return ingrediente;
-    }
-
-    public void setIngrediente(Ingrediente ingrediente) {
-        this.ingrediente = ingrediente;
-    }
-
-    public double getCantidadNecesaria() {
-        return cantidadNecesaria;
-    }
-
-    public void setCantidadNecesaria(double cantidadNecesaria) {
-        this.cantidadNecesaria = cantidadNecesaria;
+    public void setIngredientesEnReceta(Collection<IngredienteEnReceta> ingredientesEnReceta) {
+        this.ingredientesEnReceta = ingredientesEnReceta;
     }
 }

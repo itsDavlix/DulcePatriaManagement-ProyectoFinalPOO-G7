@@ -4,72 +4,44 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
              version="1.0">
-
-    <!-- UNIDAD PRINCIPAL: la que usa tu aplicación -->
+             
     <persistence-unit name="default">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
-        <!-- Si vas a usar conexión directa por JDBC, comenta o borra esta línea -->
-        <!-- <non-jta-data-source>java://comp/env/jdbc/DulceManagementDS</non-jta-data-source> -->
-
-        <!-- ENTIDADES DE NAVIOX / OPENXAVA -->
-        <class>org.openxava.session.GalleryImage</class>
-        <class>org.openxava.web.editors.DiscussionComment</class>
-        <class>com.openxava.naviox.model.ConfigurationRecord</class>
-        <class>com.openxava.naviox.model.Folder</class>
-        <class>com.openxava.naviox.model.History</class>
-        <class>com.openxava.naviox.model.Module</class>
-        <class>com.openxava.naviox.model.ModuleRights</class>
-        <class>com.openxava.naviox.model.Organization</class>
-        <class>com.openxava.naviox.model.Role</class>
-        <class>com.openxava.naviox.model.SessionRecord</class>
-        <class>com.openxava.naviox.model.SSORecord</class>
-        <class>com.openxava.naviox.model.User</class>
-
-        <!-- 👉 AQUI REGISTRAMOS TUS ENTIDADES -->
-        <class>org.example.DulceManagement.modelo.Ingrediente</class>
-        <class>org.example.DulceManagement.modelo.Producto</class>
-        <class>org.example.DulceManagement.modelo.Receta</class>
-        <class>org.example.DulceManagement.modelo.Reserva</class>
-        <class>org.example.DulceManagement.modelo.DetalleReserva</class>
-        <class>org.example.DulceManagement.modelo.Pendiente</class>
-
+    	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    	<non-jta-data-source>java://comp/env/jdbc/DulceManagementDS</non-jta-data-source>
+    	<class>org.openxava.session.GalleryImage</class>
+    	<class>org.openxava.web.editors.DiscussionComment</class>
+    	<class>com.openxava.naviox.model.ConfigurationRecord</class>
+    	<class>com.openxava.naviox.model.Folder</class>
+    	<class>com.openxava.naviox.model.History</class>
+    	<class>com.openxava.naviox.model.Module</class>
+    	<class>com.openxava.naviox.model.ModuleRights</class>
+    	<class>com.openxava.naviox.model.Organization</class>
+    	<class>com.openxava.naviox.model.Role</class>
+    	<class>com.openxava.naviox.model.SessionRecord</class>
+    	<class>com.openxava.naviox.model.SSORecord</class>
+    	<class>com.openxava.naviox.model.User</class>
         <properties>
-            <!-- CONFIGURACIÓN PARA POSTGRESQL -->
-            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/dulcemanagement"/>
-            <property name="javax.persistence.jdbc.user" value="TU_USUARIO"/></property>
-        <property name="javax.persistence.jdbc.password" value="TU_PASSWORD"/></property>
-
-    <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-
-    <!-- crear/actualizar tablas automáticamente -->
-    <!-- create / update / validate / none -->
-    <property name="javax.persistence.schema-generation.database.action" value="update"/>
-
-    <!-- Solo para depurar: ver SQL en consola -->
-    <property name="hibernate.show_sql" value="true"/>
-    <property name="hibernate.format_sql" value="true"/>
-</properties>
-        </persistence-unit>
-
-        <!-- UNIDAD PARA TESTS (puedes dejarla tal cual) -->
-<persistence-unit name="junit">
-<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-<class>org.openxava.web.editors.DiscussionComment</class>
-<class>com.openxava.naviox.model.ConfigurationRecord</class>
-<class>com.openxava.naviox.model.Folder</class>
-<class>com.openxava.naviox.model.History</class>
-<class>com.openxava.naviox.model.Module</class>
-<class>com.openxava.naviox.model.ModuleRights</class>
-<class>com.openxava.naviox.model.Organization</class>
-<class>com.openxava.naviox.model.Role</class>
-<class>com.openxava.naviox.model.SessionRecord</class>
-<class>com.openxava.naviox.model.SSORecord</class>
-<class>com.openxava.naviox.model.User</class>
-<properties>
-    <property name="hibernate.connection.url" value="jdbc:hsqldb:hsql://localhost:1666"/>
-</properties>
-</persistence-unit>
-
-        </persistence>
+            <property name="javax.persistence.schema-generation.database.action" value="update"/>
+        </properties>
+    </persistence-unit>
+                    
+    <!-- JUnit Hypersonic -->
+    <persistence-unit name="junit">
+    	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    	<class>org.openxava.web.editors.DiscussionComment</class>
+    	<class>com.openxava.naviox.model.ConfigurationRecord</class>
+    	<class>com.openxava.naviox.model.Folder</class>
+    	<class>com.openxava.naviox.model.History</class>
+    	<class>com.openxava.naviox.model.Module</class>
+    	<class>com.openxava.naviox.model.ModuleRights</class>
+    	<class>com.openxava.naviox.model.Organization</class>
+    	<class>com.openxava.naviox.model.Role</class>
+    	<class>com.openxava.naviox.model.SessionRecord</class>
+    	<class>com.openxava.naviox.model.SSORecord</class>
+    	<class>com.openxava.naviox.model.User</class>
+        <properties>
+			<property name="hibernate.connection.url" value="jdbc:hsqldb:hsql://localhost:1666"/>
+        </properties>
+    </persistence-unit>    
+    
+</persistence>

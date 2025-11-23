@@ -35,7 +35,7 @@
 	<!-- PostgreSQL -->
 	<Resource name="jdbc/DulceManagementDS" auth="Container" type="javax.sql.DataSource"
 	      maxTotal="20" maxIdle="5" maxWaitMillis="10000"
-	      username="DulceManagement" password="1234567890"
+	      username="postgres" password="1234567890"
 	      driverClassName="org.postgresql.Driver" 
 	      url="jdbc:postgresql://localhost/DulceManagementdb"/>
 

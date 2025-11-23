@@ -1,14 +1,14 @@
 package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 import org.openxava.annotations.*;
 
 @Entity
-@View(members = "nombre; unidadMedida; stockActual; stockMinimo; activo")
 public class Ingrediente {
 
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -17,63 +17,39 @@ public class Ingrediente {
     private String nombre;
 
     @Required
-    @Column(length = 10)
-    private String unidadMedida;
+    @Column(length = 20)
+    private String unidadMedida; // ej: "kg", "g", "ml"
 
     @Required
-    @Digits(integer = 10, fraction = 2)
-    private double stockActual;
+    private BigDecimal cantidadDisponible = BigDecimal.ZERO; // inventario
 
-    @Digits(integer = 10, fraction = 2)
-    private double stockMinimo;
-
-    private boolean activo = true;
+    // Getters y Setters
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNombre() {            // ?? IMPORTANTE
+    public String getNombre() {
         return nombre;
     }
-
-    public void setNombre(String nombre) {  // ?? IMPORTANTE
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     public String getUnidadMedida() {
         return unidadMedida;
     }
-
     public void setUnidadMedida(String unidadMedida) {
         this.unidadMedida = unidadMedida;
     }
 
-    public double getStockActual() {
-        return stockActual;
+    public BigDecimal getCantidadDisponible() {
+        return cantidadDisponible;
     }
-
-    public void setStockActual(double stockActual) {
-        this.stockActual = stockActual;
-    }
-
-    public double getStockMinimo() {
-        return stockMinimo;
-    }
-
-    public void setStockMinimo(double stockMinimo) {
-        this.stockMinimo = stockMinimo;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
+    public void setCantidadDisponible(BigDecimal cantidadDisponible) {
+        this.cantidadDisponible = cantidadDisponible;
     }
 }

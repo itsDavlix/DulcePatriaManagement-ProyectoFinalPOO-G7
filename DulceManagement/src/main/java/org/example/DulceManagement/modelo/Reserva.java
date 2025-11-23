@@ -1,41 +1,43 @@
 package org.example.DulceManagement.modelo;
 
-import org.example.DulceManagement.modelo.enums.EstadoReserva;
 import javax.persistence.*;
-import org.openxava.annotations.*;
 import java.util.*;
+import java.util.Date;
+import org.openxava.annotations.*;
+import org.openxava.calculators.CurrentDateCalculator;
 
 @Entity
 @View(members =
-        "fecha, cliente, estado;" +
-                "detalles"
+        "fecha, nombreCliente, comentarios;" +
+                "lineasReserva"
 )
 public class Reserva {
 
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Required
+    @DefaultValueCalculator(CurrentDateCalculator.class)
     private Date fecha;
 
-    @Column(length = 50)
-    private String cliente;
-
     @Required
-    @Enumerated(EnumType.STRING)
-    private EstadoReserva estado;
+    @Column(length = 80)
+    private String nombreCliente;
+
+    @Column(length = 200)
+    private String comentarios;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
-    @ListProperties("producto.nombre, cantidad, estadoStock")
-    private Collection<DetalleReserva> detalles;
+    @ListProperties("receta.nombre, cantidad, notas")
+    private Collection<LineaReserva> lineasReserva;
 
-    // ===== GETTERS Y SETTERS =====
+    // Getters y Setters
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -43,32 +45,28 @@ public class Reserva {
     public Date getFecha() {
         return fecha;
     }
-
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
-    public String getCliente() {
-        return cliente;
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
+    public String getComentarios() {
+        return comentarios;
+    }
+    public void setComentarios(String comentarios) {
+        this.comentarios = comentarios;
     }
 
-    public EstadoReserva getEstado() {
-        return estado;
+    public Collection<LineaReserva> getLineasReserva() {
+        return lineasReserva;
     }
-
-    public void setEstado(EstadoReserva estado) {
-        this.estado = estado;
-    }
-
-    public Collection<DetalleReserva> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(Collection<DetalleReserva> detalles) {
-        this.detalles = detalles;
+    public void setLineasReserva(Collection<LineaReserva> lineasReserva) {
+        this.lineasReserva = lineasReserva;
     }
 }
