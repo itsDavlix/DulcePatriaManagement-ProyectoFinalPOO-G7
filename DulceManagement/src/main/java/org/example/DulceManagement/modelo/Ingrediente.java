@@ -17,8 +17,9 @@ public class Ingrediente {
     private String nombre;
 
     @Required
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private String unidadMedida; // ej: "kg", "g", "ml"
+    private UnidadMedida unidadMedida; // ej: GRAMO, KILOGRAMO, etc.
 
     @Required
     private BigDecimal cantidadDisponible = BigDecimal.ZERO; // inventario
@@ -39,10 +40,11 @@ public class Ingrediente {
         this.nombre = nombre;
     }
 
-    public String getUnidadMedida() {
+    // Ahora el tipo del getter/setter es el enum, no String
+    public UnidadMedida getUnidadMedida() {
         return unidadMedida;
     }
-    public void setUnidadMedida(String unidadMedida) {
+    public void setUnidadMedida(UnidadMedida unidadMedida) {
         this.unidadMedida = unidadMedida;
     }
 
