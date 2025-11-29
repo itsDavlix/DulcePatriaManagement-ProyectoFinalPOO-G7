@@ -19,10 +19,15 @@ public class Ingrediente {
     @Required
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private UnidadMedida unidadMedida; // ej: GRAMO, KILOGRAMO, etc.
+    private UnidadMedida unidadMedida; // GRAMO, KILOGRAMO, etc.
 
     @Required
     private BigDecimal cantidadDisponible = BigDecimal.ZERO; // inventario
+
+    // ? NUEVO: costo unitario de compra (por unidadMedida)
+    @Required
+    @Money
+    private BigDecimal costoUnitario = BigDecimal.ZERO;
 
     // Getters y Setters
 
@@ -40,7 +45,6 @@ public class Ingrediente {
         this.nombre = nombre;
     }
 
-    // Ahora el tipo del getter/setter es el enum, no String
     public UnidadMedida getUnidadMedida() {
         return unidadMedida;
     }
@@ -53,5 +57,12 @@ public class Ingrediente {
     }
     public void setCantidadDisponible(BigDecimal cantidadDisponible) {
         this.cantidadDisponible = cantidadDisponible;
+    }
+
+    public BigDecimal getCostoUnitario() {
+        return costoUnitario;
+    }
+    public void setCostoUnitario(BigDecimal costoUnitario) {
+        this.costoUnitario = costoUnitario;
     }
 }

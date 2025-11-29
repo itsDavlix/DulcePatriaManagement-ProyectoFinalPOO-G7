@@ -22,7 +22,17 @@ public class IngredienteEnReceta {
     private Ingrediente ingrediente;
 
     @Required
-    private BigDecimal cantidad; // cantidad del ingrediente para 1 unidad de receta
+    private BigDecimal cantidad;
+
+    // ? NUEVO: costo de este ingrediente dentro de la receta
+    @Money
+    @Depends("ingrediente, cantidad")
+    public BigDecimal getCosto() {
+        if (ingrediente == null || ingrediente.getCostoUnitario() == null || cantidad == null) {
+            return BigDecimal.ZERO;
+        }
+        return ingrediente.getCostoUnitario().multiply(cantidad);
+    }
 
     // Getters y Setters
 

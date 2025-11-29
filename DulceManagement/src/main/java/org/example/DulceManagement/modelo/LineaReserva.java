@@ -22,7 +22,37 @@ public class LineaReserva {
     private Receta receta;
 
     @Required
-    private BigDecimal cantidad; // cuántas unidades de esta receta
+    private BigDecimal cantidad;
+
+    // ? Precio de venta por unidad (editable por usuario)
+    @Required
+    @Money
+    private BigDecimal precioUnitario;
+
+    // ? Importe de venta de la línea
+    @ReadOnly
+    @Money
+    @Calculation("cantidad * precioUnitario")
+    private BigDecimal importe;
+
+    // ? Costo total de esta línea (según costo de la receta)
+    @Money
+    @Depends("receta, cantidad")
+    public BigDecimal getCostoTotal() {
+        if (receta == null || cantidad == null) return BigDecimal.ZERO;
+        BigDecimal costoUnitarioReceta = receta.getCostoTotal();
+        if (costoUnitarioReceta == null) return BigDecimal.ZERO;
+        return costoUnitarioReceta.multiply(cantidad);
+    }
+
+    // ? Margen de esta línea = venta - costo
+    @Money
+    @Depends("receta, cantidad, precioUnitario")
+    public BigDecimal getMargenLinea() {
+        BigDecimal venta = (importe != null) ? importe : BigDecimal.ZERO;
+        BigDecimal costo = getCostoTotal();
+        return venta.subtract(costo);
+    }
 
     @Column(length = 200)
     private String notas;
@@ -55,6 +85,20 @@ public class LineaReserva {
     }
     public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    public BigDecimal getImporte() {
+        return importe;
+    }
+    public void setImporte(BigDecimal importe) {
+        this.importe = importe;
     }
 
     public String getNotas() {
