@@ -3,6 +3,9 @@ package org.example.DulceManagement.modelo;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import org.openxava.annotations.*;
+import java.util.Collection;              // ? NUEVO
+import org.openxava.jpa.XPersistence;    // ? NUEVO
+
 
 @Entity
 public class LineaReserva {
@@ -106,5 +109,59 @@ public class LineaReserva {
     }
     public void setNotas(String notas) {
         this.notas = notas;
+    }
+
+    @PostPersist
+    private void actualizarInventarioYGenerarPendientes() {
+
+        // ? Obtenemos la receta y la cantidad de ESTA línea de reserva
+        Receta receta = getReceta();          // usa el getter ya existente
+        BigDecimal cantidadReserva = getCantidad(); // idem
+
+        if (receta == null || cantidadReserva == null) return;
+
+        Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
+        if (ingredientes == null) return;
+
+        for (IngredienteEnReceta det : ingredientes) {
+            if (det == null) continue;
+
+            Ingrediente ingrediente = det.getIngrediente();
+            BigDecimal cantidadPorUnidad = det.getCantidad(); // cantidad de ingrediente por 1 unidad de receta
+
+            if (ingrediente == null || cantidadPorUnidad == null) continue;
+
+            // Cantidad total requerida de este ingrediente para ESTA línea
+            BigDecimal requerida = cantidadPorUnidad.multiply(cantidadReserva);
+            if (requerida == null) continue;
+
+            BigDecimal disponible = ingrediente.getCantidadDisponible();
+            if (disponible == null) disponible = BigDecimal.ZERO;
+
+            // ? Inventario suficiente: se descuenta y no hay pendiente
+            if (disponible.compareTo(requerida) >= 0) {
+                ingrediente.setCantidadDisponible(disponible.subtract(requerida));
+            }
+            // ? Inventario insuficiente: se consume lo que hay y se genera pendiente
+            else {
+                BigDecimal faltante = requerida.subtract(disponible);
+
+                // Consumimos todo lo disponible y dejamos en 0
+                ingrediente.setCantidadDisponible(BigDecimal.ZERO);
+
+                // Creamos el pendiente con la cantidad que falta
+                Pendiente pendiente = new Pendiente();
+                pendiente.setIngrediente(ingrediente);
+                pendiente.setCantidad(faltante);
+                pendiente.setDescripcion(
+                        "Falta de " + ingrediente.getNombre() +
+                                " para receta " + receta.getNombre()
+                );
+                pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
+                // Si Pendiente tiene campo estado con valor por defecto, lo respetamos
+
+                XPersistence.getManager().persist(pendiente);
+            }
+        }
     }
 }
