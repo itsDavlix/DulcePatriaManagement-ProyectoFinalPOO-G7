@@ -24,7 +24,6 @@ public class Ingrediente {
     @Required
     private BigDecimal cantidadDisponible = BigDecimal.ZERO; // inventario
 
-    // ? NUEVO: costo unitario de compra (por unidadMedida)
     @Required
     @Money
     private BigDecimal costoUnitario = BigDecimal.ZERO;

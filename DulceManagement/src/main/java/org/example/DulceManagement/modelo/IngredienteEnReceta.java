@@ -24,7 +24,6 @@ public class IngredienteEnReceta {
     @Required
     private BigDecimal cantidad;
 
-    // ? NUEVO: costo de este ingrediente dentro de la receta
     @Money
     @Depends("ingrediente, cantidad")
     public BigDecimal getCosto() {
@@ -34,7 +33,6 @@ public class IngredienteEnReceta {
         return ingrediente.getCostoUnitario().multiply(cantidad);
     }
 
-    // Getters y Setters
 
     public Long getId() {
         return id;

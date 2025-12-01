@@ -28,7 +28,6 @@ public class Pendiente {
     @Column(length = 15)
     private String estado = "PENDIENTE";
 
-    // Getters y Setters
 
     public Long getId() {
         return id;

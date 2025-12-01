@@ -3,8 +3,8 @@ package org.example.DulceManagement.modelo;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import org.openxava.annotations.*;
-import java.util.Collection;              // ? NUEVO
-import org.openxava.jpa.XPersistence;    // ? NUEVO
+import java.util.Collection;
+import org.openxava.jpa.XPersistence;
 
 
 @Entity
@@ -27,18 +27,15 @@ public class LineaReserva {
     @Required
     private BigDecimal cantidad;
 
-    // ? Precio de venta por unidad (editable por usuario)
     @Required
     @Money
     private BigDecimal precioUnitario;
 
-    // ? Importe de venta de la línea
     @ReadOnly
     @Money
     @Calculation("cantidad * precioUnitario")
     private BigDecimal importe;
 
-    // ? Costo total de esta línea (según costo de la receta)
     @Money
     @Depends("receta, cantidad")
     public BigDecimal getCostoTotal() {
@@ -48,7 +45,6 @@ public class LineaReserva {
         return costoUnitarioReceta.multiply(cantidad);
     }
 
-    // ? Margen de esta línea = venta - costo
     @Money
     @Depends("receta, cantidad, precioUnitario")
     public BigDecimal getMargenLinea() {
@@ -60,7 +56,6 @@ public class LineaReserva {
     @Column(length = 200)
     private String notas;
 
-    // Getters y Setters
 
     public Long getId() {
         return id;
@@ -114,8 +109,7 @@ public class LineaReserva {
     @PostPersist
     private void actualizarInventarioYGenerarPendientes() {
 
-        // ? Obtenemos la receta y la cantidad de ESTA línea de reserva
-        Receta receta = getReceta();          // usa el getter ya existente
+        Receta receta = getReceta();
         BigDecimal cantidadReserva = getCantidad(); // idem
 
         if (receta == null || cantidadReserva == null) return;
@@ -127,29 +121,24 @@ public class LineaReserva {
             if (det == null) continue;
 
             Ingrediente ingrediente = det.getIngrediente();
-            BigDecimal cantidadPorUnidad = det.getCantidad(); // cantidad de ingrediente por 1 unidad de receta
+            BigDecimal cantidadPorUnidad = det.getCantidad();
 
             if (ingrediente == null || cantidadPorUnidad == null) continue;
 
-            // Cantidad total requerida de este ingrediente para ESTA línea
             BigDecimal requerida = cantidadPorUnidad.multiply(cantidadReserva);
             if (requerida == null) continue;
 
             BigDecimal disponible = ingrediente.getCantidadDisponible();
             if (disponible == null) disponible = BigDecimal.ZERO;
 
-            // ? Inventario suficiente: se descuenta y no hay pendiente
             if (disponible.compareTo(requerida) >= 0) {
                 ingrediente.setCantidadDisponible(disponible.subtract(requerida));
             }
-            // ? Inventario insuficiente: se consume lo que hay y se genera pendiente
             else {
                 BigDecimal faltante = requerida.subtract(disponible);
 
-                // Consumimos todo lo disponible y dejamos en 0
                 ingrediente.setCantidadDisponible(BigDecimal.ZERO);
 
-                // Creamos el pendiente con la cantidad que falta
                 Pendiente pendiente = new Pendiente();
                 pendiente.setIngrediente(ingrediente);
                 pendiente.setCantidad(faltante);
@@ -158,7 +147,6 @@ public class LineaReserva {
                                 " para receta " + receta.getNombre()
                 );
                 pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
-                // Si Pendiente tiene campo estado con valor por defecto, lo respetamos
 
                 XPersistence.getManager().persist(pendiente);
             }

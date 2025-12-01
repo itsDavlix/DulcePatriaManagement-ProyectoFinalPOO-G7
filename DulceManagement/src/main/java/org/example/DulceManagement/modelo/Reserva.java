@@ -33,7 +33,6 @@ public class Reserva {
     @Column(length = 200)
     private String comentarios;
 
-    // ? IVA y totales de venta con @Calculation sobre la colección
     @Digits(integer = 2, fraction = 0)
     private BigDecimal porcentajeIVA;
 
@@ -55,7 +54,6 @@ public class Reserva {
     )
     private Collection<LineaReserva> lineasReserva;
 
-    // ? Total de venta sin IVA (solo sumando importes)
     @Money
     @Depends("lineasReserva")
     public BigDecimal getImporteSinIVA() {
@@ -71,7 +69,6 @@ public class Reserva {
         return total;
     }
 
-    // ? Costo total de la reserva (suma de costos de cada línea)
     @Money
     @Depends("lineasReserva")
     public BigDecimal getCostoTotal() {
@@ -87,7 +84,6 @@ public class Reserva {
         return total;
     }
 
-    // ? Beneficio estimado = venta sin IVA ? costo
     @Money
     @Depends("lineasReserva")
     public BigDecimal getBeneficioEstimado() {
@@ -96,7 +92,6 @@ public class Reserva {
         return venta.subtract(costo);
     }
 
-    // Getters y Setters
 
     public Long getId() {
         return id;
@@ -170,35 +165,29 @@ public class Reserva {
                 if (det == null) continue;
 
                 Ingrediente ingrediente = det.getIngrediente();
-                BigDecimal cantidadPorUnidad = det.getCantidad(); // cantidad de ingrediente por 1 unidad de receta
+                BigDecimal cantidadPorUnidad = det.getCantidad();
 
                 if (ingrediente == null || cantidadPorUnidad == null) continue;
 
-                // Cantidad total requerida de este ingrediente para esta línea
                 BigDecimal requerida = cantidadPorUnidad.multiply(cantidadReserva);
                 if (requerida == null) continue;
 
                 BigDecimal disponible = ingrediente.getCantidadDisponible();
                 if (disponible == null) disponible = BigDecimal.ZERO;
 
-                // Hay inventario suficiente
                 if (disponible.compareTo(requerida) >= 0) {
                     ingrediente.setCantidadDisponible(disponible.subtract(requerida));
                 }
-                // No hay suficiente inventario -> crear Pendiente
                 else {
                     BigDecimal faltante = requerida.subtract(disponible);
 
-                    // Consumimos todo lo disponible y dejamos en 0
                     ingrediente.setCantidadDisponible(BigDecimal.ZERO);
 
-                    // Crear registro Pendiente con la cantidad faltante
                     Pendiente pendiente = new Pendiente();
                     pendiente.setIngrediente(ingrediente);
                     pendiente.setDescripcion("Falta para reserva de " + receta.getNombre());
                     pendiente.setCantidad(faltante);
                     pendiente.setNotas("Generado automáticamente al crear la reserva");
-                    // estado queda por defecto "PENDIENTE"
 
                     XPersistence.getManager().persist(pendiente);
                 }
