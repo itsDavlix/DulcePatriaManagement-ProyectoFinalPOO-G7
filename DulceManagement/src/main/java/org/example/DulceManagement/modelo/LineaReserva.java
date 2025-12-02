@@ -152,4 +152,34 @@ public class LineaReserva {
             }
         }
     }
+
+    @PreRemove
+    private void devolverInventarioAlEliminar() {
+
+        Receta receta = getReceta();
+        BigDecimal cantidadReserva = getCantidad();
+
+        if (receta == null || cantidadReserva == null) return;
+
+        Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
+        if (ingredientes == null) return;
+
+        for (IngredienteEnReceta det : ingredientes) {
+            if (det == null) continue;
+
+            Ingrediente ingrediente = det.getIngrediente();
+            BigDecimal cantidadPorUnidad = det.getCantidad();
+
+            if (ingrediente == null || cantidadPorUnidad == null) continue;
+
+            BigDecimal devolver = cantidadPorUnidad.multiply(cantidadReserva);
+            if (devolver == null) continue;
+
+            BigDecimal disponible = ingrediente.getCantidadDisponible();
+            if (disponible == null) disponible = BigDecimal.ZERO;
+
+            // Sumamos de vuelta al inventario
+            ingrediente.setCantidadDisponible(disponible.add(devolver));
+        }
+    }
 }
