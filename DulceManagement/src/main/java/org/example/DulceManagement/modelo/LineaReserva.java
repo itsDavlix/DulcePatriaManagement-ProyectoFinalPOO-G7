@@ -70,14 +70,21 @@ public class LineaReserva {
     }
 
 
-    @PostPersist
-    @PostUpdate
+    @PrePersist
+    @PreUpdate
     private void actualizarInventarioYGenerarPendientes() {
 
         Receta receta = getReceta();
-        BigDecimal cantidadReserva = getCantidad(); // idem
+        BigDecimal cantidadActual = getCantidad();
 
-        if (receta == null || cantidadReserva == null) return;
+        if (receta == null || cantidadActual == null) return;
+
+        // Cantidad antes del cambio (0 si es una nueva línea)
+        BigDecimal anterior = this.cantidadAnterior == null ? BigDecimal.ZERO : this.cantidadAnterior;
+        BigDecimal diferencia = cantidadActual.subtract(anterior);
+
+        // Si no hay cambio en cantidad no hacemos nada
+        if (diferencia.compareTo(BigDecimal.ZERO) == 0) return;
 
         Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
         if (ingredientes == null) return;
@@ -90,32 +97,48 @@ public class LineaReserva {
 
             if (ingrediente == null || cantidadPorUnidad == null) continue;
 
-            BigDecimal requerida = cantidadPorUnidad.multiply(cantidadReserva);
-            if (requerida == null) continue;
-
             BigDecimal disponible = ingrediente.getCantidadDisponible();
             if (disponible == null) disponible = BigDecimal.ZERO;
 
-            if (disponible.compareTo(requerida) >= 0) {
-                ingrediente.setCantidadDisponible(disponible.subtract(requerida));
+            // Si la diferencia es positiva, consumimos más inventario
+            if (diferencia.compareTo(BigDecimal.ZERO) > 0) {
+
+                BigDecimal requerida = cantidadPorUnidad.multiply(diferencia);
+                if (requerida == null) continue;
+
+                if (disponible.compareTo(requerida) >= 0) {
+                    // Hay suficiente stock: restamos solo lo extra
+                    ingrediente.setCantidadDisponible(disponible.subtract(requerida));
+                }
+                else {
+                    // No hay suficiente stock: consumimos todo y generamos pendiente
+                    BigDecimal faltante = requerida.subtract(disponible);
+
+                    ingrediente.setCantidadDisponible(BigDecimal.ZERO);
+
+                    Pendiente pendiente = new Pendiente();
+                    pendiente.setIngrediente(ingrediente);
+                    pendiente.setCantidad(faltante);
+                    pendiente.setDescripcion(
+                            "Falta de " + ingrediente.getNombre() +
+                                    " para receta " + receta.getNombre()
+                    );
+                    pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
+
+                    XPersistence.getManager().persist(pendiente);
+                }
             }
+            // Si la diferencia es negativa, devolvemos inventario
             else {
-                BigDecimal faltante = requerida.subtract(disponible);
+                BigDecimal devolver = cantidadPorUnidad.multiply(diferencia.abs());
+                if (devolver == null) continue;
 
-                ingrediente.setCantidadDisponible(BigDecimal.ZERO);
-
-                Pendiente pendiente = new Pendiente();
-                pendiente.setIngrediente(ingrediente);
-                pendiente.setCantidad(faltante);
-                pendiente.setDescripcion(
-                        "Falta de " + ingrediente.getNombre() +
-                                " para receta " + receta.getNombre()
-                );
-                pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
-
-                XPersistence.getManager().persist(pendiente);
+                ingrediente.setCantidadDisponible(disponible.add(devolver));
             }
         }
+
+        // Dejamos preparada la cantidadAnterior para un próximo cambio
+        this.cantidadAnterior = this.cantidad;
     }
 
     @PreRemove
