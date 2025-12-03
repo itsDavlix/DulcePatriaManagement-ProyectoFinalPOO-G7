@@ -61,8 +61,17 @@ public class LineaReserva {
     @Column(length = 200)
     private String notas;
 
+    @Transient
+    private BigDecimal cantidadAnterior;
+
+    @PostLoad
+    private void guardarCantidadAnterior() {
+        this.cantidadAnterior = this.cantidad;
+    }
+
 
     @PostPersist
+    @PostUpdate
     private void actualizarInventarioYGenerarPendientes() {
 
         Receta receta = getReceta();
@@ -102,7 +111,7 @@ public class LineaReserva {
                         "Falta de " + ingrediente.getNombre() +
                                 " para receta " + receta.getNombre()
                 );
-                pendiente.setNotas("Generado autom?ticamente al guardar la l?nea de reserva");
+                pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
 
                 XPersistence.getManager().persist(pendiente);
             }

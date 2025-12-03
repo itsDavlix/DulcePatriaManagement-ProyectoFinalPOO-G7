@@ -24,6 +24,7 @@ public class Pendiente {
     @Column(length = 100)
     private String descripcion;
 
+    @Required
     private BigDecimal cantidad;
 
     @Column(length = 200)
