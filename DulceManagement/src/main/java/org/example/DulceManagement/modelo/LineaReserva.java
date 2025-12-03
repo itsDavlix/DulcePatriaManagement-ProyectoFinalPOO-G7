@@ -2,11 +2,16 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.openxava.annotations.*;
 import java.util.Collection;
 import org.openxava.jpa.XPersistence;
 
 
+@Setter
+@Getter
 @Entity
 public class LineaReserva {
 
@@ -57,55 +62,6 @@ public class LineaReserva {
     private String notas;
 
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Reserva getReserva() {
-        return reserva;
-    }
-    public void setReserva(Reserva reserva) {
-        this.reserva = reserva;
-    }
-
-    public Receta getReceta() {
-        return receta;
-    }
-    public void setReceta(Receta receta) {
-        this.receta = receta;
-    }
-
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
-
-    public BigDecimal getImporte() {
-        return importe;
-    }
-    public void setImporte(BigDecimal importe) {
-        this.importe = importe;
-    }
-
-    public String getNotas() {
-        return notas;
-    }
-    public void setNotas(String notas) {
-        this.notas = notas;
-    }
-
     @PostPersist
     private void actualizarInventarioYGenerarPendientes() {
 
@@ -146,7 +102,7 @@ public class LineaReserva {
                         "Falta de " + ingrediente.getNombre() +
                                 " para receta " + receta.getNombre()
                 );
-                pendiente.setNotas("Generado automáticamente al guardar la línea de reserva");
+                pendiente.setNotas("Generado autom?ticamente al guardar la l?nea de reserva");
 
                 XPersistence.getManager().persist(pendiente);
             }

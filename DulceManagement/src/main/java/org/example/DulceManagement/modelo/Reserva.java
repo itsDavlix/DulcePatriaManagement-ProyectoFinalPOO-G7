@@ -1,7 +1,9 @@
 package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
-import org.openxava.jpa.XPersistence;
+
+import lombok.Getter;
+import lombok.Setter;
 import javax.validation.constraints.Digits;
 import java.util.*;
 import java.util.Date;
@@ -9,6 +11,8 @@ import java.math.BigDecimal;
 import org.openxava.annotations.*;
 import org.openxava.calculators.CurrentDateCalculator;
 
+@Setter
+@Getter
 @Entity
 @View(members =
         "fecha, nombreCliente, comentarios;" +
@@ -34,7 +38,7 @@ public class Reserva {
     private String comentarios;
 
     @Digits(integer = 2, fraction = 0)
-    private BigDecimal porcentajeIVA;
+    private BigDecimal porcentajeIVA = new BigDecimal("15");
 
     @ReadOnly
     @Money
@@ -52,7 +56,7 @@ public class Reserva {
                     "importe+[reserva.porcentajeIVA, reserva.iva, reserva.importeTotal], " +
                     "costoTotal, margenLinea, notas"
     )
-    private Collection<LineaReserva> lineasReserva;
+    private Collection<LineaReserva> lineasReserva = new ArrayList<>();
 
     @Money
     @Depends("lineasReserva")
@@ -90,108 +94,5 @@ public class Reserva {
         BigDecimal venta = getImporteSinIVA();
         BigDecimal costo = getCostoTotal();
         return venta.subtract(costo);
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public String getComentarios() {
-        return comentarios;
-    }
-    public void setComentarios(String comentarios) {
-        this.comentarios = comentarios;
-    }
-
-    public BigDecimal getPorcentajeIVA() {
-        return porcentajeIVA;
-    }
-    public void setPorcentajeIVA(BigDecimal porcentajeIVA) {
-        this.porcentajeIVA = porcentajeIVA;
-    }
-
-    public BigDecimal getIva() {
-        return iva;
-    }
-    public void setIva(BigDecimal iva) {
-        this.iva = iva;
-    }
-
-    public BigDecimal getImporteTotal() {
-        return importeTotal;
-    }
-    public void setImporteTotal(BigDecimal importeTotal) {
-        this.importeTotal = importeTotal;
-    }
-
-    public Collection<LineaReserva> getLineasReserva() {
-        return lineasReserva;
-    }
-    public void setLineasReserva(Collection<LineaReserva> lineasReserva) {
-        this.lineasReserva = lineasReserva;
-    }
-
-    @PrePersist
-    private void actualizarInventarioYGenerarPendientes() {
-        if (lineasReserva == null) return;
-
-        for (LineaReserva lr : lineasReserva) {
-            if (lr == null) continue;
-            Receta receta = lr.getReceta();
-            BigDecimal cantidadReserva = lr.getCantidad();
-
-            if (receta == null || cantidadReserva == null) continue;
-            if (receta.getIngredientesEnReceta() == null) continue;
-
-            for (IngredienteEnReceta det : receta.getIngredientesEnReceta()) {
-                if (det == null) continue;
-
-                Ingrediente ingrediente = det.getIngrediente();
-                BigDecimal cantidadPorUnidad = det.getCantidad();
-
-                if (ingrediente == null || cantidadPorUnidad == null) continue;
-
-                BigDecimal requerida = cantidadPorUnidad.multiply(cantidadReserva);
-                if (requerida == null) continue;
-
-                BigDecimal disponible = ingrediente.getCantidadDisponible();
-                if (disponible == null) disponible = BigDecimal.ZERO;
-
-                if (disponible.compareTo(requerida) >= 0) {
-                    ingrediente.setCantidadDisponible(disponible.subtract(requerida));
-                }
-                else {
-                    BigDecimal faltante = requerida.subtract(disponible);
-
-                    ingrediente.setCantidadDisponible(BigDecimal.ZERO);
-
-                    Pendiente pendiente = new Pendiente();
-                    pendiente.setIngrediente(ingrediente);
-                    pendiente.setDescripcion("Falta para reserva de " + receta.getNombre());
-                    pendiente.setCantidad(faltante);
-                    pendiente.setNotas("Generado automáticamente al crear la reserva");
-
-                    XPersistence.getManager().persist(pendiente);
-                }
-            }
-        }
     }
 }

@@ -4,8 +4,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.util.*;
 import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.openxava.annotations.*;
 
+@Setter
+@Getter
 @Entity
 @View(members =
         "nombre, precioVenta, margenPorcentaje, costoTotal, precioSugerido, margenEstimado;" +
@@ -30,7 +35,7 @@ public class Receta {
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
     @ListProperties("ingrediente.nombre, cantidad, ingrediente.unidadMedida, costo")
-    private Collection<IngredienteEnReceta> ingredientesEnReceta;
+    private Collection<IngredienteEnReceta> ingredientesEnReceta = new ArrayList<>();
 
     @Money
     @Depends("ingredientesEnReceta")
@@ -67,41 +72,5 @@ public class Receta {
         if (costo == null) costo = BigDecimal.ZERO;
         BigDecimal precio = (precioVenta != null) ? precioVenta : getPrecioSugerido();
         return precio.subtract(costo);
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public BigDecimal getPrecioVenta() {
-        return precioVenta;
-    }
-    public void setPrecioVenta(BigDecimal precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public BigDecimal getMargenPorcentaje() {
-        return margenPorcentaje;
-    }
-    public void setMargenPorcentaje(BigDecimal margenPorcentaje) {
-        this.margenPorcentaje = margenPorcentaje;
-    }
-
-    public Collection<IngredienteEnReceta> getIngredientesEnReceta() {
-        return ingredientesEnReceta;
-    }
-    public void setIngredientesEnReceta(Collection<IngredienteEnReceta> ingredientesEnReceta) {
-        this.ingredientesEnReceta = ingredientesEnReceta;
     }
 }

@@ -2,8 +2,13 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.openxava.annotations.*;
 
+@Setter
+@Getter
 @Entity
 public class IngredienteEnReceta {
 
@@ -31,34 +36,5 @@ public class IngredienteEnReceta {
             return BigDecimal.ZERO;
         }
         return ingrediente.getCostoUnitario().multiply(cantidad);
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Receta getReceta() {
-        return receta;
-    }
-    public void setReceta(Receta receta) {
-        this.receta = receta;
-    }
-
-    public Ingrediente getIngrediente() {
-        return ingrediente;
-    }
-    public void setIngrediente(Ingrediente ingrediente) {
-        this.ingrediente = ingrediente;
-    }
-
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
     }
 }

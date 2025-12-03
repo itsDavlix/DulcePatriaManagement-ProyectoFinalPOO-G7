@@ -2,8 +2,13 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.openxava.annotations.*;
 
+@Setter
+@Getter
 @Entity
 public class Pendiente {
 
@@ -27,47 +32,4 @@ public class Pendiente {
     @Required
     @Column(length = 15)
     private String estado = "PENDIENTE";
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Ingrediente getIngrediente() {
-        return ingrediente;
-    }
-    public void setIngrediente(Ingrediente ingrediente) {
-        this.ingrediente = ingrediente;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public String getNotas() {
-        return notas;
-    }
-    public void setNotas(String notas) {
-        this.notas = notas;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 }
