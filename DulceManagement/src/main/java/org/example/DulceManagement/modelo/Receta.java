@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.util.*;
 import java.math.BigDecimal;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
@@ -58,7 +57,6 @@ public class Receta {
         BigDecimal costo = getCostoTotal();
         if (costo == null) costo = BigDecimal.ZERO;
         if (margenPorcentaje == null) return costo;
-
         return costo.add(
                 costo.multiply(margenPorcentaje)
                         .divide(new BigDecimal("100"))
@@ -70,7 +68,11 @@ public class Receta {
     public BigDecimal getMargenEstimado() {
         BigDecimal costo = getCostoTotal();
         if (costo == null) costo = BigDecimal.ZERO;
-        BigDecimal precio = (precioVenta != null) ? precioVenta : getPrecioSugerido();
+        BigDecimal precio = precioVenta;
+        if (precio == null) {
+            precio = getPrecioSugerido();
+            if (precio == null) precio = BigDecimal.ZERO;
+        }
         return precio.subtract(costo);
     }
 }

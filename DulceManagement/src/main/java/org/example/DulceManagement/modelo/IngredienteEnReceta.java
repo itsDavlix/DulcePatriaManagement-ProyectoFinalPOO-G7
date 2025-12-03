@@ -2,7 +2,7 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
+import javax.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
@@ -27,6 +27,7 @@ public class IngredienteEnReceta {
     private Ingrediente ingrediente;
 
     @Required
+    @DecimalMin("0")
     private BigDecimal cantidad;
 
     @Money

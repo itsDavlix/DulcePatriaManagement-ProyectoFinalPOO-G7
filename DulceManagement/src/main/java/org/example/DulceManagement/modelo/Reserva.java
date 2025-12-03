@@ -10,6 +10,8 @@ import java.util.Date;
 import java.math.BigDecimal;
 import org.openxava.annotations.*;
 import org.openxava.calculators.CurrentDateCalculator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Setter
 @Getter
@@ -27,6 +29,7 @@ public class Reserva {
     private Long id;
 
     @Required
+    @Temporal(TemporalType.DATE)
     @DefaultValueCalculator(CurrentDateCalculator.class)
     private Date fecha;
 

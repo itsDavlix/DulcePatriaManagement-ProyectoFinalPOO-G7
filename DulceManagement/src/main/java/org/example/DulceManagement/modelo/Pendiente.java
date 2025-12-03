@@ -2,7 +2,7 @@ package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
+import javax.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
@@ -25,6 +25,7 @@ public class Pendiente {
     private String descripcion;
 
     @Required
+    @DecimalMin("0")
     private BigDecimal cantidad;
 
     @Column(length = 200)
