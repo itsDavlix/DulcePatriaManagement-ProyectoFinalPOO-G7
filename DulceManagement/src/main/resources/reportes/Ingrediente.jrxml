@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteIngredientes" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40" uuid="26db89ac-bbb4-4ee1-b6d4-f40da9619cc5">
+	<parameter name="Sistema" class="java.lang.String"/>
+	<parameter name="EmitidoPor" class="java.lang.String"/>
+	<parameter name="Logo" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="unidadMedida" class="java.lang.String"/>
+	<field name="cantidadDisponible" class="java.math.BigDecimal"/>
+	<field name="costoUnitario" class="java.math.BigDecimal"/>
+	<title>
+		<band height="150">
+			<staticText>
+				<reportElement x="0" y="75" width="515" height="20" uuid="3d475d3c-133d-4a70-97ab-887d4c3cd872"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dulce Patria System]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="515" height="30" uuid="18906f03-1c9d-4185-9661-74d2eb23183a"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE INGREDIENTES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="140" width="515" height="1" uuid="b7f4f458-45a7-429f-813c-48da9a8f75e4"/>
+			</line>
+			<image>
+				<reportElement x="200" y="-40" width="290" height="115" uuid="4a38098d-e437-4f7b-bf36-d26f723dba30"/>
+				<imageExpression><![CDATA["C:\Users\Adrian Cruz\Downloads\Imagen de WhatsApp 2025-12-03 a las 19.25.39_22b28bbc.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30">
+			<textField>
+				<reportElement x="0" y="5" width="200" height="20" uuid="9e767f69-c4da-419c-aaa6-c81174f72503"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="5" width="215" height="20" uuid="45aad065-2d49-4557-bdcc-2dab724c321e"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Emitido por: $P{EmitidoPor}]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="28" width="515" height="1" uuid="3f98a93b-c8c3-4633-bddc-198e95125eb8"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30">
+			<staticText>
+				<reportElement x="0" y="0" width="40" height="30" backcolor="#DDDDDD" uuid="efee153c-1f7b-4a8d-80df-6d7763038bc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="0" width="150" height="30" backcolor="#DDDDDD" uuid="c2a235b0-cd40-48ed-88a2-640ebb1374ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="120" height="30" backcolor="#DDDDDD" uuid="3cb9f385-4fb3-4fc4-a221-0d4ccff817b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="80" height="30" backcolor="#DDDDDD" uuid="cdf73420-b341-4d7f-b278-8ac849ac3e54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="0" width="85" height="30" backcolor="#DDDDDD" uuid="cadc6885-594a-4312-92ba-39e299732f40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COSTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="0" width="40" height="20" uuid="33f2f666-e1ca-4a9f-b5a4-3db33ad7d5f0"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="150" height="20" uuid="43f3d558-77da-4069-80ba-7781d07d5ddc"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="120" height="20" uuid="e13dba34-06a5-4963-bee9-e476932be9e5"/>
+				<textFieldExpression><![CDATA[$F{unidadMedida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="80" height="20" uuid="ec42b0c2-e6ee-4546-860e-a86128ddd77c"/>
+				<textFieldExpression><![CDATA[$F{cantidadDisponible}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="0" width="85" height="20" uuid="36a173f5-c732-4821-98dd-3d8c3ee91128"/>
+				<textFieldExpression><![CDATA[$F{costoUnitario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25">
+			<textField>
+				<reportElement x="0" y="5" width="515" height="20" uuid="10bd75ce-91f3-4496-ab76-bc5a4dc7e56a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
