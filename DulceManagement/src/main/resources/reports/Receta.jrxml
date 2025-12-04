@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jasperReport
+        name="Recetas"
+        language="java"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="535"
+        leftMargin="20"
+        rightMargin="20"
+        topMargin="20"
+        bottomMargin="20">
+
+    <!-- 1) Estilos -->
+    <style name="Title" isBold="true"/>
+    <style name="ColumnHeader" isBold="true"/>
+
+    <!-- 2) Parámetros -->
+    <parameter name="TITULO" class="java.lang.String"/>
+
+    <!-- 3) Campos que vienen de la clase Receta -->
+    <field name="nombre" class="java.lang.String"/>
+    <field name="precioVenta" class="java.math.BigDecimal"/>
+    <field name="margenPorcentaje" class="java.math.BigDecimal"/>
+    <field name="costoTotal" class="java.math.BigDecimal"/>
+
+    <!-- TÍTULO DEL INFORME -->
+    <title>
+        <band height="70">
+
+            <!-- Texto fijo DULCE PATRIA -->
+            <staticText>
+                <reportElement x="0" y="0" width="535" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[DULCE PATRIA]]></text>
+            </staticText>
+
+            <!-- Subtítulo con el parámetro TITULO -->
+            <textField>
+                <reportElement x="0" y="35" width="535" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </title>
+
+    <!-- CABECERA DE COLUMNAS -->
+    <columnHeader>
+        <band height="20">
+
+            <staticText>
+                <reportElement x="0" y="0" width="150" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nombre receta]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="150" y="0" width="100" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Precio venta]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="250" y="0" width="135" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Margen %]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="385" y="0" width="150" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Costo total]]></text>
+            </staticText>
+
+        </band>
+    </columnHeader>
+
+    <!-- DETALLE: UNA LÍNEA POR CADA RECETA -->
+    <detail>
+        <band height="20">
+
+            <textField>
+                <reportElement x="0" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="150" y="0" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{precioVenta}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="250" y="0" width="135" height="20"/>
+                <textFieldExpression><![CDATA[$F{margenPorcentaje}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="385" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{costoTotal}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </detail>
+
+    <!-- PIE DE PÁGINA: FECHA Y NÚMERO DE PÁGINA -->
+    <pageFooter>
+        <band height="20">
+
+            <!-- Fecha -->
+            <textField>
+                <reportElement x="0" y="0" width="200" height="20"/>
+                <textElement>
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+
+            <!-- Número de página -->
+            <textField>
+                <reportElement x="400" y="0" width="135" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </pageFooter>
+
+</jasperReport>

@@ -14,23 +14,13 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
 -->
 
 <controladores>
-    
-    <!-- Variable de entorno: 
-    <var-entorno nombre="DulceManagement_ANYO_DEFECTO" valor="2015"/>
-    -->
-    
-    <!-- Objeto de sesión:
-    <Objeto nombre="DulceManagement_anyoActivo" clase="java.lang.Integer" valor="2015" 
-            ambito="global"/>
-    -->
-    
-    <!-- Controlador:
-    <controlador nombre="Profesor">
+
+    <controlador nombre="Receta">
         <hereda-de controlador="Typical"/>
-        <accion nombre="n0  ew" icono="library-plus" atajo-de-teclado="Control N"
-                clase="acciones.CrearProfesor"/>
+        <accion nombre="GenerarReporte" icono="printer" modo="list"
+                clase="org.example.DulceManagement.actions.PrintRecetaAction"/>
     </controlador>
-    -->
+
 
     <controlador nombre="Ingrediente">
         <hereda-de controlador="Typical"/>
