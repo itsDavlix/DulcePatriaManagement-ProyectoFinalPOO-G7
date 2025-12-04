@@ -27,7 +27,7 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
     <!-- Controlador:
     <controlador nombre="Profesor">
         <hereda-de controlador="Typical"/>
-        <accion nombre="new" icono="library-plus" atajo-de-teclado="Control N"
+        <accion nombre="n0  ew" icono="library-plus" atajo-de-teclado="Control N"
                 clase="acciones.CrearProfesor"/>
     </controlador>
     -->
@@ -35,7 +35,7 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
     <controlador nombre="Ingrediente">
         <hereda-de controlador="Typical"/>
         <accion nombre="GenerarReporte" icono="printer" modo="list"
-                clase="org.example.DulceManagement.actions.ImprimirIngrediente"/>
+                clase="org.example.DulceManagement.actions.PrintIngredienteAction"/>
     </controlador>
     
 </controladores>

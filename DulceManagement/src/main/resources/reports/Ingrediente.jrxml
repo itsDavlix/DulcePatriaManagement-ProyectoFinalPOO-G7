@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+        "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport name="IngredientesListado" language="java"
+              pageWidth="595" pageHeight="842"
+              leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20"
+              columnWidth="555"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <!-- PARAMETROS -->
+    <parameter name="tituloSistema" class="java.lang.String"/>
+
+    <!-- CAMPOS -->
+    <field name="id" class="java.lang.Long"/>
+    <field name="nombre" class="java.lang.String"/>
+    <field name="unidadMedida" class="java.lang.Object"/>
+    <field name="cantidadDisponible" class="java.math.BigDecimal"/>
+    <field name="costoUnitario" class="java.math.BigDecimal"/>
+
+    <!-- TÍTULO PRINCIPAL -->
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="40"/>
+                <textElement textAlignment="Center">
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ingredientes – Dulce Patria System]]></text>
+            </staticText>
+
+            <!-- Línea gris separadora -->
+            <line>
+                <reportElement x="0" y="60" width="555" height="1" forecolor="#B5B5B5"/>
+            </line>
+        </band>
+    </title>
+
+    <!-- ENCABEZADO TABLA -->
+    <columnHeader>
+        <band height="30">
+
+            <!-- Fondo gris para toda la fila -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="30" backcolor="#E6E6E6" mode="Opaque"/>
+            </rectangle>
+
+            <staticText>
+                <reportElement x="0" y="0" width="50" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="50" y="0" width="170" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nombre]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="220" y="0" width="110" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Unidad]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="330" y="0" width="115" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cantidad]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="445" y="0" width="110" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Costo]]></text>
+            </staticText>
+
+        </band>
+    </columnHeader>
+
+    <!-- DETALLE -->
+    <detail>
+        <band height="22">
+
+            <!-- Línea separadora entre filas -->
+            <line>
+                <reportElement x="0" y="21" width="555" height="1" forecolor="#DDDDDD"/>
+            </line>
+
+            <textField>
+                <reportElement x="0" y="0" width="50" height="20"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="50" y="0" width="170" height="20"/>
+                <textElement textAlignment="Left"/>
+                <textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="220" y="0" width="110" height="20"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{unidadMedida}.toString()]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="330" y="0" width="115" height="20"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{cantidadDisponible}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="#,##0.00">
+                <reportElement x="445" y="0" width="110" height="20"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{costoUnitario}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </detail>
+
+</jasperReport>
