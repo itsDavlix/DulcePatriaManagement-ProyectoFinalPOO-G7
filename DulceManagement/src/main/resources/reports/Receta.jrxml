@@ -1,127 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="RecetasDisenoBonito"
+              language="java"
+              pageWidth="842"
+              pageHeight="595"
+              orientation="Landscape"
+              columnWidth="802"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20"
+              uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
 
-<jasperReport
-        name="Recetas"
-        language="java"
-        pageWidth="595"
-        pageHeight="842"
-        columnWidth="535"
-        leftMargin="20"
-        rightMargin="20"
-        topMargin="20"
-        bottomMargin="20">
+    <!-- Estilos -->
+    <style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+    <style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+    <style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+    <style name="Detail" fontName="Arial" fontSize="12"/>
+    <style name="Row" mode="Transparent">
+        <conditionalStyle>
+            <conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+            <style backcolor="#E6DAC3"/>
+        </conditionalStyle>
+    </style>
 
-    <!-- 1) Estilos -->
-    <style name="Title" isBold="true"/>
-    <style name="ColumnHeader" isBold="true"/>
-
-    <!-- 2) Parámetros -->
+    <!-- Parámetro título -->
     <parameter name="TITULO" class="java.lang.String"/>
 
-    <!-- 3) Campos que vienen de la clase Receta -->
+    <!-- Sin consulta; usamos JRBeanCollectionDataSource -->
+    <queryString language="SQL"><![CDATA[]]></queryString>
+
+    <!-- Campos -->
     <field name="nombre" class="java.lang.String"/>
     <field name="precioVenta" class="java.math.BigDecimal"/>
     <field name="margenPorcentaje" class="java.math.BigDecimal"/>
     <field name="costoTotal" class="java.math.BigDecimal"/>
 
-    <!-- TÍTULO DEL INFORME -->
+    <!-- TÍTULO -->
     <title>
-        <band height="70">
-
-            <!-- Texto fijo DULCE PATRIA -->
+        <band height="146" splitType="Stretch">
+            <!-- Dulce Patria centrado -->
             <staticText>
-                <reportElement x="0" y="0" width="535" height="30"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="20" isBold="true"/>
-                </textElement>
-                <text><![CDATA[DULCE PATRIA]]></text>
+                <!-- (802 - 400) / 2 = 201  => centrado -->
+                <reportElement style="Title" x="201" y="0" width="400" height="62" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[Dulce Patria]]></text>
             </staticText>
 
-            <!-- Subtítulo con el parámetro TITULO -->
-            <textField>
-                <reportElement x="0" y="35" width="535" height="20"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="14"/>
+            <!-- Subtítulo fijo centrado -->
+            <staticText>
+                <reportElement style="SubTitle" x="201" y="62" width="400" height="22" uuid="f6a78448-8260-4445-a9e0-e3fb53b080d9"/>
+                <textElement textAlignment="Center">
+                    <font fontName="Times New Roman"/>
                 </textElement>
+                <text><![CDATA[Dulce Management System]]></text>
+            </staticText>
+
+            <!-- Subtítulo dinámico (TITULO) centrado -->
+            <textField>
+                <reportElement style="SubTitle" x="201" y="90" width="400" height="22" uuid="11111111-1111-1111-1111-111111111111"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
             </textField>
-
         </band>
     </title>
 
-    <!-- CABECERA DE COLUMNAS -->
+    <!-- ENCABEZADO DE COLUMNAS -->
     <columnHeader>
-        <band height="20">
+        <band height="30" splitType="Stretch">
+            <!-- Línea inferior del encabezado -->
+            <line>
+                <reportElement positionType="FixRelativeToBottom" x="0" y="29" width="802" height="1" uuid="e9d2002a-c8ee-4649-a258-640dad29110c"/>
+                <graphicElement>
+                    <pen lineWidth="0.5" lineColor="#999999"/>
+                </graphicElement>
+            </line>
 
+            <!-- Definimos una grilla:
+                 margen izquierdo interno = 40
+                 col1: x=40  width=250  (Nombre)
+                 col2: x=290 width=150  (Precio)
+                 col3: x=440 width=150  (Margen)
+                 col4: x=590 width=172  (Costo)
+            -->
+
+            <!-- Nombre Receta -->
             <staticText>
-                <reportElement x="0" y="0" width="150" height="20"/>
-                <textElement>
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Nombre receta]]></text>
+                <reportElement style="Column header" x="40" y="10" width="250" height="16" uuid="b1721b91-95b6-4f13-8b5c-fe048c8ac75f"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle"/>
+                <text><![CDATA[Nombre Receta]]></text>
             </staticText>
 
+            <!-- Precio Venta -->
             <staticText>
-                <reportElement x="150" y="0" width="100" height="20"/>
-                <textElement>
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Precio venta]]></text>
+                <reportElement style="Column header" x="290" y="10" width="150" height="16" uuid="8749ba20-a031-434d-a770-e20e7ebdae55"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <text><![CDATA[Precio Venta]]></text>
             </staticText>
 
+            <!-- Margen Porcentaje -->
             <staticText>
-                <reportElement x="250" y="0" width="135" height="20"/>
-                <textElement>
-                    <font isBold="true"/>
-                </textElement>
+                <reportElement style="Column header" x="440" y="10" width="150" height="16" uuid="5afcd3ea-1a4f-4a3d-9a4b-000000000001"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <text><![CDATA[Margen %]]></text>
             </staticText>
 
+            <!-- Costo Total -->
             <staticText>
-                <reportElement x="385" y="0" width="150" height="20"/>
-                <textElement>
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Costo total]]></text>
+                <reportElement style="Column header" x="590" y="10" width="172" height="16" uuid="5afcd3ea-1a4f-4a3d-9a4b-000000000002"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <text><![CDATA[Costo Total]]></text>
             </staticText>
-
         </band>
     </columnHeader>
 
-    <!-- DETALLE: UNA LÍNEA POR CADA RECETA -->
+    <!-- DETALLE -->
     <detail>
-        <band height="20">
+        <band height="18" splitType="Stretch">
+            <!-- Fila con estilo alternado -->
+            <frame>
+                <reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="18" uuid="fa7cec56-4ec1-48e6-a26e-7266a995d174"/>
+            </frame>
 
-            <textField>
-                <reportElement x="0" y="0" width="150" height="20"/>
+            <!-- MISMAS COORDENADAS QUE EL ENCABEZADO -->
+
+            <!-- Nombre Receta -->
+            <textField isStretchWithOverflow="true">
+                <reportElement style="Detail" x="40" y="1" width="250" height="16" uuid="77777777-7777-7777-7777-777777777777"/>
+                <textElement verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
             </textField>
 
-            <textField>
-                <reportElement x="150" y="0" width="100" height="20"/>
+            <!-- Precio Venta -->
+            <textField isStretchWithOverflow="true">
+                <reportElement style="Detail" x="290" y="1" width="150" height="16" uuid="88888888-8888-8888-8888-888888888888"/>
+                <textElement verticalAlignment="Middle" textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{precioVenta}]]></textFieldExpression>
             </textField>
 
-            <textField>
-                <reportElement x="250" y="0" width="135" height="20"/>
+            <!-- Margen Porcentaje -->
+            <textField isStretchWithOverflow="true">
+                <reportElement style="Detail" x="440" y="1" width="150" height="16" uuid="99999999-9999-9999-9999-999999999999"/>
+                <textElement verticalAlignment="Middle" textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{margenPorcentaje}]]></textFieldExpression>
             </textField>
 
-            <textField>
-                <reportElement x="385" y="0" width="150" height="20"/>
+            <!-- Costo Total -->
+            <textField isStretchWithOverflow="true">
+                <reportElement style="Detail" x="590" y="1" width="172" height="16" uuid="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"/>
+                <textElement verticalAlignment="Middle" textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{costoTotal}]]></textFieldExpression>
             </textField>
-
         </band>
     </detail>
 
-    <!-- PIE DE PÁGINA: FECHA Y NÚMERO DE PÁGINA -->
+    <!-- PIE DE PÁGINA -->
     <pageFooter>
-        <band height="20">
-
+        <band height="20" splitType="Stretch">
             <!-- Fecha -->
-            <textField>
-                <reportElement x="0" y="0" width="200" height="20"/>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="0" width="200" height="20" uuid="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"/>
                 <textElement>
                     <font size="10"/>
                 </textElement>
@@ -130,14 +170,16 @@
 
             <!-- Número de página -->
             <textField>
-                <reportElement x="400" y="0" width="135" height="20"/>
+                <reportElement x="602" y="0" width="200" height="20" uuid="cccccccc-cccc-cccc-cccc-cccccccccccc"/>
                 <textElement textAlignment="Right">
                     <font size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
-
         </band>
     </pageFooter>
 
+    <summary>
+        <band splitType="Stretch"/>
+    </summary>
 </jasperReport>
