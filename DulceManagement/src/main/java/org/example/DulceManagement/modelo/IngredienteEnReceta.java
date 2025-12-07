@@ -27,7 +27,7 @@ public class IngredienteEnReceta {
     private Ingrediente ingrediente;
 
     @Required
-    @DecimalMin("0")
+    @DecimalMin("0.01")
     private BigDecimal cantidad;
 
     @Money

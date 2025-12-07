@@ -9,7 +9,6 @@ import org.openxava.annotations.*;
 import java.util.Collection;
 import org.openxava.jpa.XPersistence;
 
-
 @Setter
 @Getter
 @Entity
@@ -30,7 +29,7 @@ public class LineaReserva {
     private Receta receta;
 
     @Required
-    @DecimalMin("0")
+    @DecimalMin("0.01")
     private BigDecimal cantidad;
 
     @Required
@@ -70,7 +69,6 @@ public class LineaReserva {
         this.cantidadAnterior = this.cantidad;
     }
 
-
     @PrePersist
     @PreUpdate
     private void actualizarInventarioYGenerarPendientes() {
@@ -80,11 +78,9 @@ public class LineaReserva {
 
         if (receta == null || cantidadActual == null) return;
 
-        // Cantidad antes del cambio (0 si es una nueva línea)
         BigDecimal anterior = this.cantidadAnterior == null ? BigDecimal.ZERO : this.cantidadAnterior;
         BigDecimal diferencia = cantidadActual.subtract(anterior);
 
-        // Si no hay cambio en cantidad no hacemos nada
         if (diferencia.compareTo(BigDecimal.ZERO) == 0) return;
 
         Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
@@ -98,25 +94,14 @@ public class LineaReserva {
 
             if (ingrediente == null || cantidadPorUnidad == null) continue;
 
-            BigDecimal disponible = ingrediente.getCantidadDisponible();
-            if (disponible == null) disponible = BigDecimal.ZERO;
-
-            // Si la diferencia es positiva, consumimos más inventario
             if (diferencia.compareTo(BigDecimal.ZERO) > 0) {
 
                 BigDecimal requerida = cantidadPorUnidad.multiply(diferencia);
                 if (requerida == null) continue;
 
-                if (disponible.compareTo(requerida) >= 0) {
-                    // Hay suficiente stock: restamos solo lo extra
-                    ingrediente.setCantidadDisponible(disponible.subtract(requerida));
-                }
-                else {
-                    // No hay suficiente stock: consumimos todo y generamos pendiente
-                    BigDecimal faltante = requerida.subtract(disponible);
+                BigDecimal faltante = ingrediente.consumirConFaltante(requerida);
 
-                    ingrediente.setCantidadDisponible(BigDecimal.ZERO);
-
+                if (faltante.compareTo(BigDecimal.ZERO) > 0) {
                     Pendiente pendiente = new Pendiente();
                     pendiente.setIngrediente(ingrediente);
                     pendiente.setCantidad(faltante);
@@ -129,46 +114,44 @@ public class LineaReserva {
                     XPersistence.getManager().persist(pendiente);
                 }
             }
-            // Si la diferencia es negativa, devolvemos inventario
             else {
                 BigDecimal devolver = cantidadPorUnidad.multiply(diferencia.abs());
                 if (devolver == null) continue;
 
-                ingrediente.setCantidadDisponible(disponible.add(devolver));
+                ingrediente.reponer(devolver);
             }
         }
 
-        // Dejamos preparada la cantidadAnterior para un próximo cambio
         this.cantidadAnterior = this.cantidad;
     }
 
     @PreRemove
     private void devolverInventarioAlEliminar() {
+        try {
+            Receta receta = getReceta();
+            BigDecimal cantidadReserva = getCantidad();
 
-        Receta receta = getReceta();
-        BigDecimal cantidadReserva = getCantidad();
+            if (receta == null || cantidadReserva == null) return;
 
-        if (receta == null || cantidadReserva == null) return;
+            Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
+            if (ingredientes == null) return;
 
-        Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
-        if (ingredientes == null) return;
+            for (IngredienteEnReceta det : ingredientes) {
+                if (det == null) continue;
 
-        for (IngredienteEnReceta det : ingredientes) {
-            if (det == null) continue;
+                Ingrediente ingrediente = det.getIngrediente();
+                BigDecimal cantidadPorUnidad = det.getCantidad();
 
-            Ingrediente ingrediente = det.getIngrediente();
-            BigDecimal cantidadPorUnidad = det.getCantidad();
+                if (ingrediente == null || cantidadPorUnidad == null) continue;
 
-            if (ingrediente == null || cantidadPorUnidad == null) continue;
+                BigDecimal devolver = cantidadPorUnidad.multiply(cantidadReserva);
+                if (devolver == null) continue;
 
-            BigDecimal devolver = cantidadPorUnidad.multiply(cantidadReserva);
-            if (devolver == null) continue;
+                // Sumamos de vuelta al inventario usando la lógica del modelo
+                ingrediente.reponer(devolver);
+            }
+        } catch (Exception ex) {
 
-            BigDecimal disponible = ingrediente.getCantidadDisponible();
-            if (disponible == null) disponible = BigDecimal.ZERO;
-
-            // Sumamos de vuelta al inventario
-            ingrediente.setCantidadDisponible(disponible.add(devolver));
         }
     }
 }

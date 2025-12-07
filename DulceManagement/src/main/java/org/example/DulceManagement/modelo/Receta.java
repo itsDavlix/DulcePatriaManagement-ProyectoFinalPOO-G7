@@ -1,7 +1,10 @@
 package org.example.DulceManagement.modelo;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.*;
 import java.math.BigDecimal;
 import lombok.Getter;
@@ -16,7 +19,6 @@ import org.openxava.annotations.*;
                 "ingredientesEnReceta"
 )
 public class Receta {
-
     @Id
     @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +31,17 @@ public class Receta {
     @Money
     private BigDecimal precioVenta;
 
+    @Min(0)
+    @Max(100)
     @Digits(integer = 3, fraction = 0)
     private BigDecimal margenPorcentaje = new BigDecimal("30");
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
     @ListProperties("ingrediente.nombre, cantidad, ingrediente.unidadMedida, costo")
     private Collection<IngredienteEnReceta> ingredientesEnReceta = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receta")
+    private Collection<LineaReserva> lineasReserva = new ArrayList<>();
 
     @Money
     @Depends("ingredientesEnReceta")
@@ -74,5 +81,14 @@ public class Receta {
             if (precio == null) precio = BigDecimal.ZERO;
         }
         return precio.subtract(costo);
+    }
+
+    @PreRemove
+    private void validarAntesDeEliminar() {
+        if (lineasReserva != null && !lineasReserva.isEmpty()) {
+            throw new ValidationException(
+                    "No se puede eliminar la receta porque ya está usada en reservas"
+            );
+        }
     }
 }

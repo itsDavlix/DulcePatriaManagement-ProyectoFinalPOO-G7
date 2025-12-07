@@ -25,13 +25,14 @@ public class Pendiente {
     private String descripcion;
 
     @Required
-    @DecimalMin("0")
+    @DecimalMin("0.01")
     private BigDecimal cantidad;
 
     @Column(length = 200)
     private String notas;
 
     @Required
+    @Enumerated(EnumType.STRING)
     @Column(length = 15)
-    private String estado = "PENDIENTE";
+    private EstadoPendiente estado = EstadoPendiente.PENDIENTE;
 }

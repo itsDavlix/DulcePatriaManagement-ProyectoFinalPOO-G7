@@ -5,6 +5,8 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.*;
 import java.util.Date;
 import java.math.BigDecimal;
@@ -17,12 +19,12 @@ import javax.persistence.TemporalType;
 @Getter
 @Entity
 @View(members =
-        "fecha, nombreCliente, comentarios;" +
-                "porcentajeIVA, iva, importeTotal, costoTotal, beneficioEstimado;" +
+        "fecha, nombreCliente, estado, comentarios;" +
+                "porcentajeIVA, iva, importeTotal, " +
+                "costoTotal, beneficioEstimado;" +
                 "lineasReserva"
 )
 public class Reserva {
-
     @Id
     @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +39,16 @@ public class Reserva {
     @Column(length = 80)
     private String nombreCliente;
 
+    @Required
+    @Enumerated(EnumType.STRING)
+    @Column(length = 15)
+    private EstadoReserva estado = EstadoReserva.PENDIENTE;
+
     @Column(length = 200)
     private String comentarios;
 
+    @Min(0)
+    @Max(100)
     @Digits(integer = 2, fraction = 0)
     private BigDecimal porcentajeIVA = new BigDecimal("15");
 
