@@ -8,6 +8,10 @@ import lombok.Setter;
 import org.openxava.annotations.*;
 import java.util.Collection;
 import org.openxava.jpa.XPersistence;
+import java.math.BigDecimal;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.openxava.annotations.*;
 
 @Setter
 @Getter
@@ -25,16 +29,20 @@ public class LineaReserva {
 
     @ManyToOne
     @Required
-    @DescriptionsList
+    @DescriptionsList(descriptionProperties = "descripcionCorta")
     private Receta receta;
 
     @Required
     @DecimalMin("0.01")
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal cantidad;
 
     @Required
     @Money
+    @DecimalMin("0")
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal precioUnitario;
+
 
     @ReadOnly
     @Money
@@ -45,17 +53,18 @@ public class LineaReserva {
     @Depends("receta, cantidad")
     public BigDecimal getCostoTotal() {
         if (receta == null || cantidad == null) return BigDecimal.ZERO;
-        BigDecimal costoUnitarioReceta = receta.getCostoTotal();
-        if (costoUnitarioReceta == null) return BigDecimal.ZERO;
-        return costoUnitarioReceta.multiply(cantidad);
+        if (receta.getCostoTotal() == null || receta.getCostoTotal().compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal costoUnitario = receta.getCostoTotal(); // o calcula como necesites
+        return costoUnitario.multiply(cantidad);
     }
 
     @Money
-    @Depends("receta, cantidad, precioUnitario")
+    @Depends("receta, cantidad, importe")
     public BigDecimal getMargenLinea() {
-        BigDecimal venta = (importe != null) ? importe : BigDecimal.ZERO;
-        BigDecimal costo = getCostoTotal();
-        return venta.subtract(costo);
+        if (importe == null) return BigDecimal.ZERO;
+        return importe.subtract(getCostoTotal());
     }
 
     @Column(length = 200)

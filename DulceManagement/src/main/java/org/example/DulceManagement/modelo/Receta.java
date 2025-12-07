@@ -5,18 +5,34 @@ import javax.validation.ValidationException;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.math.RoundingMode;
 import java.util.*;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
+import org.openxava.annotations.*;import java.math.BigDecimal;
+import java.util.*;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.openxava.annotations.*;
+
 
 @Setter
 @Getter
 @Entity
 @View(members =
-        "nombre, precioVenta, margenPorcentaje, costoTotal, precioSugerido, margenEstimado;" +
+        "nombre;" +
+                "precioVenta;" +
+                "margenPorcentaje;" +
+                "costoTotal;" +
+                "precioSugerido;" +
+                "margenEstimado;" +
                 "ingredientesEnReceta"
+)
+
+@Tab(
+        properties = "nombre, precioVenta, costoTotal, precioSugerido, margenEstimado",
+        defaultOrder = "${nombre}"
 )
 public class Receta {
     @Id
@@ -29,11 +45,13 @@ public class Receta {
     private String nombre;
 
     @Money
+    @DecimalMin("0")
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal precioVenta;
 
     @Min(0)
     @Max(100)
-    @Digits(integer = 3, fraction = 0)
+    @Digits(integer = 3, fraction = 2)
     private BigDecimal margenPorcentaje = new BigDecimal("30");
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
@@ -75,11 +93,13 @@ public class Receta {
     public BigDecimal getMargenEstimado() {
         BigDecimal costo = getCostoTotal();
         if (costo == null) costo = BigDecimal.ZERO;
+
         BigDecimal precio = precioVenta;
         if (precio == null) {
             precio = getPrecioSugerido();
-            if (precio == null) precio = BigDecimal.ZERO;
         }
+        if (precio == null) precio = BigDecimal.ZERO;
+
         return precio.subtract(costo);
     }
 
@@ -90,5 +110,33 @@ public class Receta {
                     "No se puede eliminar la receta porque ya está usada en reservas"
             );
         }
+    }
+
+    @ReadOnly
+    public String getDescripcionCorta() {
+        BigDecimal precio = precioVenta != null ? precioVenta : getPrecioSugerido();
+        BigDecimal margen = getMargenEstimado();
+
+        if (precio == null) precio = BigDecimal.ZERO;
+        if (margen == null) margen = BigDecimal.ZERO;
+
+        precio = precio.setScale(2, RoundingMode.HALF_UP);
+        margen = margen.setScale(2, RoundingMode.HALF_UP);
+
+        return nombre + " (Precio: " + precio.toPlainString() +
+                ", Margen: " + margen.toPlainString() + ")";
+    }
+
+
+    @Depends("ingredientesEnReceta, margenPorcentaje, precioVenta")
+    public BigDecimal getMargenPorcentual() {
+        BigDecimal costo = getCostoTotal();
+        if (costo == null || costo.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal margen = getMargenEstimado();
+        return margen
+                .multiply(new BigDecimal("100"))
+                .divide(costo, 2, RoundingMode.HALF_UP);
     }
 }

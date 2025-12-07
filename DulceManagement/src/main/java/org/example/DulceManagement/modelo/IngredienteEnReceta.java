@@ -6,6 +6,12 @@ import javax.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
+import java.math.BigDecimal;
+import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import org.openxava.annotations.*;
+
 
 @Setter
 @Getter
@@ -23,11 +29,12 @@ public class IngredienteEnReceta {
 
     @ManyToOne
     @Required
-    @DescriptionsList
+    @DescriptionsList(descriptionProperties = "descripcion")
     private Ingrediente ingrediente;
 
     @Required
     @DecimalMin("0.01")
+    @Digits(integer = 12, fraction = 3)
     private BigDecimal cantidad;
 
     @Money
@@ -38,4 +45,5 @@ public class IngredienteEnReceta {
         }
         return ingrediente.getCostoUnitario().multiply(cantidad);
     }
+
 }

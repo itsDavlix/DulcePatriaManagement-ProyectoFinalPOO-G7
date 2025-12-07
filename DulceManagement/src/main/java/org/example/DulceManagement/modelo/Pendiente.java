@@ -6,10 +6,20 @@ import javax.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
+import java.math.BigDecimal;
+import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import org.openxava.annotations.*;
+
 
 @Setter
 @Getter
 @Entity
+@Tab(
+        properties = "ingrediente.descripcion, descripcion, cantidad, estado",
+        defaultOrder = "${estado} asc, ${ingrediente.nombre} asc"
+)
 public class Pendiente {
 
     @Id
@@ -18,7 +28,7 @@ public class Pendiente {
     private Long id;
 
     @ManyToOne
-    @DescriptionsList
+    @DescriptionsList(descriptionProperties = "descripcion")
     private Ingrediente ingrediente;
 
     @Column(length = 100)
@@ -26,6 +36,7 @@ public class Pendiente {
 
     @Required
     @DecimalMin("0.01")
+    @Digits(integer = 12, fraction = 3)
     private BigDecimal cantidad;
 
     @Column(length = 200)

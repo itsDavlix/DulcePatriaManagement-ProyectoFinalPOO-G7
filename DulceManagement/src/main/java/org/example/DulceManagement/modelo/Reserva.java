@@ -14,15 +14,35 @@ import org.openxava.annotations.*;
 import org.openxava.calculators.CurrentDateCalculator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Collection;
+import java.util.ArrayList;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.openxava.annotations.*;
+import org.openxava.calculators.CurrentDateCalculator;
+
 
 @Setter
 @Getter
 @Entity
 @View(members =
-        "fecha, nombreCliente, estado, comentarios;" +
-                "porcentajeIVA, iva, importeTotal, " +
-                "costoTotal, beneficioEstimado;" +
+        "fecha;" +
+                "nombreCliente;" +
+                "estado;" +
+                "comentarios;" +
+                "porcentajeIVA;" +
+                "iva;" +
+                "importeTotal;" +
+                "costoTotal;" +
+                "beneficioEstimado;" +
                 "lineasReserva"
+)
+
+@Tab(
+        properties = "fecha, nombreCliente, estado, importeTotal, costoTotal, beneficioEstimado",
+        defaultOrder = "${fecha} desc"
 )
 public class Reserva {
     @Id
@@ -31,8 +51,8 @@ public class Reserva {
     private Long id;
 
     @Required
-    @Temporal(TemporalType.DATE)
     @DefaultValueCalculator(CurrentDateCalculator.class)
+    @Temporal(TemporalType.DATE)
     private Date fecha;
 
     @Required
@@ -106,5 +126,12 @@ public class Reserva {
         BigDecimal venta = getImporteSinIVA();
         BigDecimal costo = getCostoTotal();
         return venta.subtract(costo);
+    }
+
+    @ReadOnly
+    public String getResumen() {
+        String estadoTxt = estado != null ? estado.name() : "";
+        BigDecimal total = importeTotal != null ? importeTotal : BigDecimal.ZERO;
+        return nombreCliente + " - " + estadoTxt + " (" + total + ")";
     }
 }

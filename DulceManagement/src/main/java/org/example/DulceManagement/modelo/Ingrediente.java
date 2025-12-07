@@ -6,10 +6,20 @@ import javax.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
+import java.math.BigDecimal;
+import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import org.openxava.annotations.*;
+
 
 @Setter
 @Getter
 @Entity
+@Tab(
+        properties = "nombre, unidadMedida, cantidadDisponible, costoUnitario",
+        defaultOrder = "${nombre}"
+)
 public class Ingrediente {
 
     @Id
@@ -26,11 +36,14 @@ public class Ingrediente {
     @Column(length = 20)
     private UnidadMedida unidadMedida;
 
+    @DecimalMin("0")
+    @Digits(integer = 12, fraction = 3)
     private BigDecimal cantidadDisponible = BigDecimal.ZERO;
 
     @Required
     @Money
     @DecimalMin("0")
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal costoUnitario = BigDecimal.ZERO;
 
     public BigDecimal consumirConFaltante(BigDecimal cantidad) {
@@ -42,7 +55,6 @@ public class Ingrediente {
         }
 
         if (cantidadDisponible.compareTo(cantidad) >= 0) {
-            // Hay suficiente stock
             cantidadDisponible = cantidadDisponible.subtract(cantidad);
             return BigDecimal.ZERO;
         }
@@ -60,5 +72,12 @@ public class Ingrediente {
             cantidadDisponible = BigDecimal.ZERO;
         }
         cantidadDisponible = cantidadDisponible.add(cantidad);
+    }
+
+    @ReadOnly
+    @DisplaySize(50)
+    public String getDescripcion() {
+        String unidad = unidadMedida != null ? unidadMedida.name() : "";
+        return nombre + " [" + unidad + "]";
     }
 }
