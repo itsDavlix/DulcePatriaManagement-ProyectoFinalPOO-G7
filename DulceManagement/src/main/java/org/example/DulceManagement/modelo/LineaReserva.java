@@ -12,6 +12,13 @@ import java.math.BigDecimal;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.openxava.annotations.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collection;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.PreRemove;
+import javax.persistence.PostLoad;
 
 @Setter
 @Getter
@@ -53,10 +60,10 @@ public class LineaReserva {
     @Depends("receta, cantidad")
     public BigDecimal getCostoTotal() {
         if (receta == null || cantidad == null) return BigDecimal.ZERO;
-        if (receta.getCostoTotal() == null || receta.getCostoTotal().compareTo(BigDecimal.ZERO) == 0) {
+        BigDecimal costoUnitario = receta.getCostoTotal();
+        if (costoUnitario == null || costoUnitario.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }
-        BigDecimal costoUnitario = receta.getCostoTotal(); // o calcula como necesites
         return costoUnitario.multiply(cantidad);
     }
 
@@ -84,6 +91,7 @@ public class LineaReserva {
 
         Receta receta = getReceta();
         BigDecimal cantidadActual = getCantidad();
+        sincronizarPrecioDesdeReceta();
 
         if (receta == null || cantidadActual == null) return;
 
@@ -137,30 +145,21 @@ public class LineaReserva {
     @PreRemove
     private void devolverInventarioAlEliminar() {
         try {
-            Receta receta = getReceta();
-            BigDecimal cantidadReserva = getCantidad();
-
-            if (receta == null || cantidadReserva == null) return;
-
-            Collection<IngredienteEnReceta> ingredientes = receta.getIngredientesEnReceta();
-            if (ingredientes == null) return;
-
-            for (IngredienteEnReceta det : ingredientes) {
-                if (det == null) continue;
-
-                Ingrediente ingrediente = det.getIngrediente();
-                BigDecimal cantidadPorUnidad = det.getCantidad();
-
-                if (ingrediente == null || cantidadPorUnidad == null) continue;
-
-                BigDecimal devolver = cantidadPorUnidad.multiply(cantidadReserva);
-                if (devolver == null) continue;
-
-                // Sumamos de vuelta al inventario usando la lógica del modelo
-                ingrediente.reponer(devolver);
-            }
         } catch (Exception ex) {
+            throw new RuntimeException("Error al devolver inventario al eliminar línea de reserva", ex);
+        }
+    }
 
+    private void sincronizarPrecioDesdeReceta() {
+        if (receta == null) return;
+
+        BigDecimal precioReceta = receta.getPrecioBase();
+        if (precioReceta == null || precioReceta.compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+
+        if (precioUnitario == null || precioUnitario.compareTo(BigDecimal.ZERO) <= 0) {
+            precioUnitario = precioReceta;
         }
     }
 }

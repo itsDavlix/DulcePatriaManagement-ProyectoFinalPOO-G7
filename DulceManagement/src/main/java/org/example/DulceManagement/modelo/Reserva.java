@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.Date;
 import java.math.BigDecimal;
@@ -74,13 +75,27 @@ public class Reserva {
 
     @ReadOnly
     @Money
-    @Calculation("sum(lineasReserva.importe) * porcentajeIVA / 100")
-    private BigDecimal iva;
+    @Depends("lineasReserva, porcentajeIVA")
+    public BigDecimal getIva() {
+        BigDecimal base = getImporteSinIVA();
+        if (base == null) base = BigDecimal.ZERO;
+        BigDecimal porc = porcentajeIVA != null ? porcentajeIVA : BigDecimal.ZERO;
+
+        return base.multiply(porc)
+                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+    }
 
     @ReadOnly
     @Money
-    @Calculation("sum(lineasReserva.importe) + iva")
-    private BigDecimal importeTotal;
+    @Depends("lineasReserva, porcentajeIVA")
+    public BigDecimal getImporteTotal() {
+        BigDecimal base = getImporteSinIVA();
+        BigDecimal iva = getIva();
+        if (base == null) base = BigDecimal.ZERO;
+        if (iva == null) iva = BigDecimal.ZERO;
+        return base.add(iva);
+    }
+
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
     @ListProperties(
@@ -128,10 +143,25 @@ public class Reserva {
         return venta.subtract(costo);
     }
 
-    @ReadOnly
-    public String getResumen() {
-        String estadoTxt = estado != null ? estado.name() : "";
-        BigDecimal total = importeTotal != null ? importeTotal : BigDecimal.ZERO;
-        return nombreCliente + " - " + estadoTxt + " (" + total + ")";
+    @Transient
+    private EstadoReserva estadoAnterior;
+
+    @PostLoad
+    private void guardarEstadoAnterior() {
+        this.estadoAnterior = this.estado;
     }
+
+    @PreUpdate
+    private void actualizarInventarioPorCambioDeEstado() {
+        if (estadoAnterior == null) return;
+
+        if (estadoAnterior != EstadoReserva.CANCELADA &&
+                estado == EstadoReserva.CANCELADA &&
+                lineasReserva != null) {
+
+            for (LineaReserva lr : lineasReserva) {
+            }
+        }
+    }
+
 }

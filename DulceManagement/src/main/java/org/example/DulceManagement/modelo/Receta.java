@@ -15,6 +15,8 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.openxava.annotations.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 @Setter
@@ -62,6 +64,13 @@ public class Receta {
     private Collection<LineaReserva> lineasReserva = new ArrayList<>();
 
     @Money
+    @Depends("precioVenta, ingredientesEnReceta, margenPorcentaje")
+    public BigDecimal getPrecioBase() {
+        BigDecimal precio = precioVenta != null ? precioVenta : getPrecioSugerido();
+        return precio != null ? precio : BigDecimal.ZERO;
+    }
+
+    @Money
     @Depends("ingredientesEnReceta")
     public BigDecimal getCostoTotal() {
         if (ingredientesEnReceta == null) return BigDecimal.ZERO;
@@ -81,11 +90,23 @@ public class Receta {
     public BigDecimal getPrecioSugerido() {
         BigDecimal costo = getCostoTotal();
         if (costo == null) costo = BigDecimal.ZERO;
-        if (margenPorcentaje == null) return costo;
-        return costo.add(
-                costo.multiply(margenPorcentaje)
-                        .divide(new BigDecimal("100"))
-        );
+
+        if (margenPorcentaje == null) {
+            return costo;
+        }
+
+        BigDecimal cien = new BigDecimal("100");
+        BigDecimal margenDecimal = margenPorcentaje
+                .divide(cien, 4, RoundingMode.HALF_UP);
+
+        if (margenDecimal.compareTo(BigDecimal.ONE) >= 0) {
+            return costo;
+        }
+
+        BigDecimal unoMenosMargen = BigDecimal.ONE.subtract(margenDecimal);
+
+        return costo
+                .divide(unoMenosMargen, 2, RoundingMode.HALF_UP);
     }
 
     @Money
@@ -94,10 +115,7 @@ public class Receta {
         BigDecimal costo = getCostoTotal();
         if (costo == null) costo = BigDecimal.ZERO;
 
-        BigDecimal precio = precioVenta;
-        if (precio == null) {
-            precio = getPrecioSugerido();
-        }
+        BigDecimal precio = getPrecioBase();
         if (precio == null) precio = BigDecimal.ZERO;
 
         return precio.subtract(costo);
@@ -114,7 +132,7 @@ public class Receta {
 
     @ReadOnly
     public String getDescripcionCorta() {
-        BigDecimal precio = precioVenta != null ? precioVenta : getPrecioSugerido();
+        BigDecimal precio = getPrecioBase();
         BigDecimal margen = getMargenEstimado();
 
         if (precio == null) precio = BigDecimal.ZERO;
@@ -127,9 +145,20 @@ public class Receta {
                 ", Margen: " + margen.toPlainString() + ")";
     }
 
-
     @Depends("ingredientesEnReceta, margenPorcentaje, precioVenta")
     public BigDecimal getMargenPorcentual() {
+        BigDecimal costo = getCostoTotal();
+        if (costo == null || costo.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal margen = getMargenEstimado();
+        return margen
+                .multiply(new BigDecimal("100"))
+                .divide(costo, 2, RoundingMode.HALF_UP);
+    }
+
+    @Depends("ingredientesEnReceta, margenPorcentaje, precioVenta")
+    public BigDecimal getMargenPorcentualReal() {
         BigDecimal costo = getCostoTotal();
         if (costo == null || costo.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
