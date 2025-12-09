@@ -2,18 +2,20 @@
 
 <!DOCTYPE controladores SYSTEM "dtds/controladores.dtd">
 
-<!-- 
-Documentación sobre controladores: 
-https://www.openxava.org/OpenXavaDoc/docs/controllers_es.html
-
-Controladores por defecto, incluidos en OpenXava (puedes extender de ellos):
-https://github.com/openxava/openxava/blob/master/openxava/src/main/resources/xava/default-controllers.xml
- 
-Ejemplos de controladores (de la aplicación de pruebas):
-https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources/xava/controllers.xml
--->
-
 <controladores>
+
+    <controlador nombre="Ingrediente">
+        <hereda-de controlador="Typical"/>
+        <accion nombre="GenerarReporte" icono="printer" modo="list"
+                clase="org.example.DulceManagement.actions.PrintIngredienteAction"/>
+    </controlador>
+
+    <controlador nombre="Reserva">
+        <hereda-de controlador="Typical"/>
+        <accion nombre="GenerarReporte" icono="printer" modo="list"
+                clase="org.example.DulceManagement.actions.PrintReservaAction"/>
+    </controlador>
+
 
     <controlador nombre="Receta">
         <hereda-de controlador="Typical"/>
@@ -21,11 +23,13 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
                 clase="org.example.DulceManagement.actions.PrintRecetaAction"/>
     </controlador>
 
-
-    <controlador nombre="Ingrediente">
+    <controlador nombre="Pendiente">
         <hereda-de controlador="Typical"/>
         <accion nombre="GenerarReporte" icono="printer" modo="list"
-                clase="org.example.DulceManagement.actions.PrintIngredienteAction"/>
+                clase="org.example.DulceManagement.actions.PrintPendienteAction"/>
     </controlador>
-    
+
+
+
+
 </controladores>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ReservasListadoBonito"
+              language="java"
+              pageWidth="842"
+              pageHeight="595"
+              orientation="Landscape"
+              columnWidth="802"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+
+    <style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+    <style name="SubTitle" fontName="Arial" fontSize="18"/>
+    <style name="ColumnHeader" fontName="Arial" fontSize="12" isBold="true"/>
+    <style name="Detail" fontName="Arial" fontSize="12"/>
+
+
+
+    <parameter name="TITULO" class="java.lang.String"/>
+
+    <field name="id" class="java.lang.Long"/>
+    <field name="nombreCliente" class="java.lang.String"/>
+    <field name="fecha" class="java.util.Date"/>
+    <field name="estado" class="java.lang.String"/>
+    <field name="importeTotal" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="146">
+
+            <staticText>
+                <reportElement style="Title" x="200" y="0" width="442" height="60"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[Dulce Patria]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement style="SubTitle" x="200" y="60" width="442" height="25"/>
+                <textElement textAlignment="Center">
+                    <font size="18"/>
+                </textElement>
+                <text><![CDATA[Dulce Management System]]></text>
+            </staticText>
+
+            <textField>
+                <reportElement style="SubTitle" x="200" y="90" width="442" height="25"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="30">
+
+            <line>
+                <reportElement x="0" y="29" width="802" height="1"/>
+            </line>
+
+            <staticText>
+                <reportElement style="ColumnHeader" x="20" y="10" width="70" height="16"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement style="ColumnHeader" x="90" y="10" width="220" height="16"/>
+                <textElement textAlignment="Left"/>
+                <text><![CDATA[Cliente]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement style="ColumnHeader" x="310" y="10" width="130" height="16"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[Fecha]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement style="ColumnHeader" x="440" y="10" width="160" height="16"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[Estado]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement style="ColumnHeader" x="600" y="10" width="180" height="16"/>
+                <textElement textAlignment="Right"/>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+
+        </band>
+    </columnHeader>
+
+        <detail>
+        <band height="20">
+
+            <line>
+                <reportElement x="0" y="19" width="802" height="1" forecolor="#DDDDDD"/>
+            </line>
+
+            <textField>
+                <reportElement style="Detail" x="20" y="1" width="70" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement style="Detail" x="90" y="1" width="220" height="16"/>
+                <textElement textAlignment="Left"/>
+                <textFieldExpression><![CDATA[$F{nombreCliente}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="dd/MM/yyyy">
+                <reportElement style="Detail" x="310" y="1" width="130" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement style="Detail" x="440" y="1" width="160" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="#,##0.00">
+                <reportElement style="Detail" x="600" y="1" width="180" height="16"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA[$F{importeTotal}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="20">
+
+            <!-- Fecha -->
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="0" y="0" width="200" height="20"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+
+            <!-- Página -->
+            <textField>
+                <reportElement x="602" y="0" width="200" height="20"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+
+        </band>
+    </pageFooter>
+
+</jasperReport>
