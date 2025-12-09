@@ -4,8 +4,7 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import org.openxava.actions.JasperReportBaseAction;
 import org.openxava.jpa.XPersistence;
-import org.example.DulceManagement.modelo.Reserva; // ajusta el paquete si es necesario
-
+import org.example.DulceManagement.modelo.Reserva;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -18,14 +17,10 @@ public class PrintReservaAction extends JasperReportBaseAction {
                 .createQuery("select r from Reserva r", Reserva.class)
                 .getResultList();
 
-        // OBS: usamos Map<String,?> en la lista para encajar con el constructor de Jasper
         List<Map<String, ?>> rows = new ArrayList<>();
 
         for (Reserva r : reservas) {
-
-            // creamos el mapa concreto (Map<String,Object>)
             Map<String, Object> row = new HashMap<>();
-
             row.put("id", r.getId());
             row.put("nombreCliente", r.getNombreCliente());
             row.put("fecha", r.getFecha());
@@ -40,12 +35,9 @@ public class PrintReservaAction extends JasperReportBaseAction {
                 estado = "PROCESADA";
             }
             row.put("estado", estado);
-
-            // agregar el mapa concreto a la lista tipada como Map<String,?>
             rows.add(row);
         }
 
-        // esto ahora encaja en: JRMapCollectionDataSource(Collection<? extends Map<String, ?>>)
         return new JRMapCollectionDataSource(rows);
     }
 

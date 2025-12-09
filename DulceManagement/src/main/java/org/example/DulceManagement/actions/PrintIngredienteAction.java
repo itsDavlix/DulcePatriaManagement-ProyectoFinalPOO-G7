@@ -16,7 +16,6 @@ public class PrintIngredienteAction extends JasperReportBaseAction {
     @Override
     protected JRDataSource getDataSource() throws Exception {
 
-        // Obtener todos los ingredientes desde la base
         List<Ingrediente> ingredientes = XPersistence.getManager()
                 .createQuery("select i from Ingrediente i", Ingrediente.class)
                 .getResultList();
@@ -28,7 +27,6 @@ public class PrintIngredienteAction extends JasperReportBaseAction {
     public Map getParameters() throws Exception {
         Map parametros = new HashMap();
 
-        // Puedes modificar este título si lo deseas
         parametros.put("TITULO", "Listado de Ingredientes");
 
         return parametros;
@@ -36,7 +34,6 @@ public class PrintIngredienteAction extends JasperReportBaseAction {
 
     @Override
     protected String getJRXML() {
-        // Debe coincidir con el nombre exacto del archivo en /resources/reports
         return "Ingrediente.jrxml";
     }
 }

@@ -14,23 +14,19 @@
               topMargin="20"
               bottomMargin="20">
 
-    <!-- ==== Estilos ==== -->
     <style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
     <style name="SubTitle" fontName="Arial" fontSize="18"/>
     <style name="ColumnHeader" fontName="Arial" fontSize="12" isBold="true"/>
     <style name="Detail" fontName="Arial" fontSize="12"/>
 
-    <!-- ==== Parámetro ==== -->
     <parameter name="TITULO" class="java.lang.String"/>
 
-    <!-- ==== Campos ==== -->
     <field name="id" class="java.lang.Long"/>
     <field name="ingrediente" class="org.example.DulceManagement.modelo.Ingrediente"/>
     <field name="descripcion" class="java.lang.String"/>
     <field name="cantidad" class="java.math.BigDecimal"/>
     <field name="estado" class="java.lang.String"/>
 
-    <!-- ==== Título ==== -->
     <title>
         <band height="146">
 
@@ -55,7 +51,6 @@
         </band>
     </title>
 
-    <!-- ==== Encabezado de columnas ==== -->
     <columnHeader>
         <band height="30">
 
@@ -92,47 +87,34 @@
                 <textElement textAlignment="Center"/>
                 <text><![CDATA[Estado]]></text>
             </staticText>
-
         </band>
     </columnHeader>
 
-    <!-- ==== Detalle ==== -->
     <detail>
         <band height="20">
-
             <line>
                 <reportElement x="0" y="19" width="802" height="1" forecolor="#DDDDDD"/>
             </line>
-
-            <!-- ID -->
             <textField>
                 <reportElement style="Detail" x="20" y="1" width="60" height="16"/>
                 <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
             </textField>
-
-            <!-- Ingrediente -->
             <textField>
                 <reportElement style="Detail" x="80" y="1" width="220" height="16"/>
                 <textElement textAlignment="Left"/>
                 <textFieldExpression><![CDATA[$F{ingrediente}.getNombre()]]></textFieldExpression>
             </textField>
-
-            <!-- Descripción -->
             <textField>
                 <reportElement style="Detail" x="300" y="1" width="220" height="16"/>
                 <textElement textAlignment="Left"/>
                 <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
             </textField>
-
-            <!-- Cantidad -->
             <textField pattern="#,##0.00">
                 <reportElement style="Detail" x="520" y="1" width="120" height="16"/>
                 <textElement textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
             </textField>
-
-            <!-- Estado (null-safe) -->
             <textField isBlankWhenNull="true">
                 <reportElement style="Detail" x="640" y="1" width="160" height="16"/>
                 <textElement textAlignment="Center"/>
@@ -143,8 +125,6 @@
 
         </band>
     </detail>
-
-    <!-- ==== Pie de página ==== -->
     <pageFooter>
         <band height="20">
 

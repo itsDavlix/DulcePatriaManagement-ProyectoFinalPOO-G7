@@ -6,7 +6,6 @@
               pageWidth="842" pageHeight="595" orientation="Landscape"
               columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 
-    <!-- Estilos -->
     <style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
     <style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
     <style name="ColumnHeader" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -76,7 +75,6 @@
 
     <detail>
         <band height="20" splitType="Stretch">
-            <!-- separador tenue por fila -->
             <line>
                 <reportElement x="0" y="19" width="802" height="1" forecolor="#DDDDDD"/>
             </line>

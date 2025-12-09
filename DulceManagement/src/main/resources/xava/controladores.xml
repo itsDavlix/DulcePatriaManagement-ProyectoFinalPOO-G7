@@ -16,7 +16,6 @@
                 clase="org.example.DulceManagement.actions.PrintReservaAction"/>
     </controlador>
 
-
     <controlador nombre="Receta">
         <hereda-de controlador="Typical"/>
         <accion nombre="GenerarReporte" icono="printer" modo="list"

@@ -139,13 +139,11 @@
     <pageFooter>
         <band height="20">
 
-            <!-- Fecha -->
             <textField pattern="dd/MM/yyyy HH:mm">
                 <reportElement x="0" y="0" width="200" height="20"/>
                 <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
             </textField>
 
-            <!-- Página -->
             <textField>
                 <reportElement x="602" y="0" width="200" height="20"/>
                 <textElement textAlignment="Right"/>
