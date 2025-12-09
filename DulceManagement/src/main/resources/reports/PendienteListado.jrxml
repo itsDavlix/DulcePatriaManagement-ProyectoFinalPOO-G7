@@ -59,7 +59,9 @@
     <columnHeader>
         <band height="30">
 
-            <line><reportElement x="0" y="29" width="802" height="1"/></line>
+            <line>
+                <reportElement x="0" y="29" width="802" height="1"/>
+            </line>
 
             <staticText>
                 <reportElement style="ColumnHeader" x="20" y="10" width="60" height="16"/>
@@ -98,36 +100,45 @@
     <detail>
         <band height="20">
 
-            <line><reportElement x="0" y="19" width="802" height="1" forecolor="#DDDDDD"/></line>
+            <line>
+                <reportElement x="0" y="19" width="802" height="1" forecolor="#DDDDDD"/>
+            </line>
 
+            <!-- ID -->
             <textField>
                 <reportElement style="Detail" x="20" y="1" width="60" height="16"/>
                 <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
             </textField>
 
+            <!-- Ingrediente -->
             <textField>
                 <reportElement style="Detail" x="80" y="1" width="220" height="16"/>
                 <textElement textAlignment="Left"/>
                 <textFieldExpression><![CDATA[$F{ingrediente}.getNombre()]]></textFieldExpression>
             </textField>
 
+            <!-- Descripción -->
             <textField>
                 <reportElement style="Detail" x="300" y="1" width="220" height="16"/>
                 <textElement textAlignment="Left"/>
                 <textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
             </textField>
 
+            <!-- Cantidad -->
             <textField pattern="#,##0.00">
                 <reportElement style="Detail" x="520" y="1" width="120" height="16"/>
                 <textElement textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
             </textField>
 
-            <textField>
+            <!-- Estado (null-safe) -->
+            <textField isBlankWhenNull="true">
                 <reportElement style="Detail" x="640" y="1" width="160" height="16"/>
                 <textElement textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[
+                    $F{estado} == null ? "" : $F{estado}
+                ]]></textFieldExpression>
             </textField>
 
         </band>
