@@ -2,101 +2,148 @@
   <img src="logo-dulcepatria.png" alt="Dulce Patria" width="220"/>
 </p>
 
-# 🍰 DulceManagement - Gestión de operaciones Dulce Patria
+# 🍰 DulceManagement - Gestión integral de operaciones Dulce Patria
 
-Aplicación web modular para la gestión de inventario, recetas, reservas y **pendientes por falta de stock** de la cafetería/pastelería **Dulce Patria**.  
+Aplicación web modular para la gestión de inventario, recetas, reservas y control de pendientes por falta de stock de la cafetería/pastelería **Dulce Patria**.
+
 Desarrollada en **Java**, **OpenXava** y **PostgreSQL**, usando **IntelliJ IDEA** como IDE principal.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17%2B-007396" alt="Java 17+"/>
   <img src="https://img.shields.io/badge/OpenXava-7.4.5-00a8e8" alt="OpenXava 7.4.5"/>
   <img src="https://img.shields.io/badge/Base%20de%20Datos-PostgreSQL%2017-336791" alt="PostgreSQL 17"/>
-  <img src="https://img.shields.io/badge/Estado-En%20desarrollo-informational" alt="Estado En desarrollo"/>
+  <img src="https://img.shields.io/badge/Estado-Completado-success" alt="Estado Completado"/>
   <img src="https://img.shields.io/badge/UAM-Proyecto%20Acad%C3%A9mico-00bcd4" alt="UAM Proyecto Académico"/>
 </p>
 
 ---
 
-## ✨ Funcionalidades principales
+## 📝 Sobre el Proyecto
 
-- **Ingredientes**
-  - Alta/edición de ingredientes.
-  - Unidad de medida (g, ml, unidades, etc.).
+**DulceManagement** nace como una solución para centralizar y automatizar la operación diaria de la cafetería/pastelería **Dulce Patria**:
+
+- Evita el control manual de inventarios y recetas.
+- Reduce errores al tomar reservas y pedidos.
+- Permite identificar de forma inmediata qué ingredientes faltan para completar las órdenes.
+- Brinda trazabilidad entre **ingredientes → recetas → productos → reservas**.
+
+El sistema está pensado para uso interno del negocio, con una interfaz web sencilla basada en OpenXava, de fácil despliegue y mantenimiento.
+
+---
+
+## ✨ Funcionalidades Clave (Requerimientos Funcionales)
+
+### 1. Gestión de Ingredientes
+
+- Alta, edición y eliminación de ingredientes.
+- Registro de:
+  - Nombre del ingrediente.
+  - Unidad de medida (gramos, mililitros, unidades, etc.).
   - Cantidad disponible en inventario.
+- Consulta rápida del stock disponible.
 
-- **Recetas y productos**
-  - Registro de productos de venta.
-  - Asociación de recetas: ingredientes + cantidad + unidad.
+### 2. Gestión de Recetas y Productos
 
-- **Reservas/Pedidos**
-  - Selección de productos y cantidades para el cliente.
-  - Cálculo automático de ingredientes a consumir según las recetas.
-  - Verificación de inventario antes de confirmar la reserva.
+- Registro de **productos de venta** (pasteles, postres, bebidas, etc.).
+- Definición de **recetas** asociadas a cada producto:
+  - Ingredientes requeridos.
+  - Cantidad y unidad de medida por ingrediente.
+- Cálculo automático de los ingredientes necesarios según la cantidad de productos solicitados.
 
-- **Inventario**
-  - Registro de existencias de ingredientes.
-  - Descuento automático de stock al confirmar pedidos (según los ingredientes utilizados).
+### 3. Reservas / Pedidos
 
-- **Lista de pendientes**
-  - Cuando el inventario no es suficiente para cubrir totalmente una reserva, el sistema genera registros en **Pendientes** indicando:
-    - El ingrediente afectado.
-    - La cantidad faltante.
-    - La reserva asociada.
-  - Esto permite saber exactamente qué ingredientes hay que reponer para completar los pedidos.
+- Creación de reservas para clientes indicando:
+  - Productos deseados.
+  - Cantidades.
+  - Fecha y detalles de la reserva.
+- Validación automática del inventario antes de confirmar la reserva.
+- Asociación de cada reserva con los ingredientes que consumirá.
 
----
+### 4. Inventario
 
-## 🧪 Cómo probar el sistema desde cero
+- Registro de existencias de ingredientes.
+- Actualización automática del stock:
+  - **Descuento** al confirmar reservas o pedidos.
+  - Posibilidad de **reabastecer** inventario ingresando nuevas existencias.
+- Consulta de movimientos de inventario por ingrediente.
 
-1. **Crear ingredientes**  
-   - Registrar varios ingredientes con su unidad de medida y una cantidad inicial de inventario.
+### 5. Lista de Pendientes por Falta de Stock
 
-2. **Definir recetas y productos**  
-   - Crear productos de venta.
-   - Asociar a cada producto una receta con sus ingredientes y cantidades.
+Cuando el inventario no es suficiente para cubrir totalmente una reserva, el sistema genera registros en el módulo de **Pendientes**, indicando:
 
-3. **Crear una reserva con inventario suficiente**  
-   - Generar una reserva/pedido que use menos cantidad de la disponible.
-   - Verificar que el inventario se descuente correctamente y que no se generen pendientes.
+- Ingrediente afectado.
+- Cantidad faltante.
+- Reserva asociada.
 
-4. **Crear una reserva con inventario insuficiente**  
-   - Generar otra reserva que requiera más cantidad de uno o varios ingredientes de la que hay en stock.
-   - Confirmar la reserva y revisar:
-     - Que se hayan registrado entradas en **Pendientes** con la cantidad faltante.
-     - Que puedas identificar fácilmente qué ingresar al inventario para poder cumplir el pedido.
+Esto permite saber con precisión qué ingredientes y en qué cantidad deben reponerse para cumplir los pedidos pendientes.
 
----
+### 6. Flujo básico de uso
 
-## 🧰 Tecnologías
-
-- Java (JDK 17)  
-- OpenXava 7.4.5  
-- PostgreSQL 17  
-- IntelliJ IDEA  
+1. Registrar ingredientes.
+2. Definir recetas y productos.
+3. Registrar reservas/pedidos.
+4. Revisar:
+   - Inventario actualizado.
+   - Pendientes generados (si hubo faltante de stock).
 
 ---
 
-## 🚀 Puesta en marcha
+## 🏗️ Arquitectura y Recursos
 
-1. Clonar el repositorio:
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd DulceManagement
-   ```
+### Arquitectura General
 
-2. Crear una base de datos en PostgreSQL (por ejemplo `dulce_management`).
+DulceManagement sigue una arquitectura típica de aplicación empresarial Java:
 
-3. Configurar las credenciales de la base de datos en los archivos de configuración del proyecto  
-   (por ejemplo `persistence.xml` o las propiedades de OpenXava).
+1. **Capa de Presentación (Web UI)**  
+   - Implementada con **OpenXava**, que genera una interfaz web basada en módulos.
+   - Formularios y listas para gestionar las entidades principales (Ingredientes, Recetas, Productos, Reservas, Inventario, Pendientes).
 
-4. Importar el proyecto en **IntelliJ IDEA** como proyecto Maven/Gradle (según corresponda) y ejecutar la aplicación  
-   usando la clase principal de OpenXava o la configuración de ejecución incluida en el proyecto.
+2. **Capa de Lógica de Negocio**  
+   - Clases Java que representan los módulos de dominio.
+   - Reglas de negocio clave:
+     - Cálculo de ingredientes necesarios por producto.
+     - Verificación de stock al confirmar reservas.
+     - Generación automática de registros en Pendientes.
 
-5. Acceder desde el navegador a la URL local configurada  
-   (por ejemplo `http://localhost:8080/DulceManagement`).
+3. **Capa de Persistencia**  
+   - Uso de JPA/Hibernate (incluido en OpenXava) para mapear entidades a tablas.
+   - Base de datos relacional **PostgreSQL 17**.
+
+### Recursos Principales del Proyecto
+
+- **Lenguaje:** Java (JDK 17+)
+- **Framework:** OpenXava 7.4.5
+- **Base de Datos:** PostgreSQL 17
+- **IDE recomendado:** IntelliJ IDEA
+- **Módulos de negocio:**
+  - Ingredientes
+  - Recetas
+  - Productos
+  - Reservas/Pedidos
+  - Inventario
+  - Pendientes
 
 ---
 
-## 👤 Autor
+## 👥 Actores del Sistema
 
-Desarrollado por **David Espinoza** como proyecto académico.
+| Actor                      | Descripción                                                                                      | Permisos principales                                                                   |
+|---------------------------|--------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| **Administrador/Coordinador** | Usuario con visión global del sistema.                                                        | Configurar catálogos, gestionar usuarios, revisar reportes e inventario general.      |
+| **Encargado de Inventario**   | Responsable de registrar entradas y salidas de ingredientes.                                  | Crear/editar ingredientes, actualizar existencias, revisar y atender pendientes.      |
+| **Personal de Ventas**        | Atiende al cliente y registra las reservas/pedidos en el sistema.                             | Crear reservas, consultar disponibilidad de productos y revisar estado de pedidos.    |
+| **Cliente (indirecto)**       | No interactúa directamente con el sistema, pero se ve beneficiado por la correcta operación. | Sus pedidos se gestionan a través del personal de ventas usando DulceManagement.      |
+
+> *Los actores pueden ajustarse a la estructura real del negocio (por ejemplo, fusionar roles o añadir nuevos usuarios según sea necesario).*
+
+---
+
+## 🧑‍💻 Equipo de Desarrollo
+
+| CIF      | Nombre Completo                              | Rol                         |
+|----------|----------------------------------------------|-----------------------------|
+| 24010572 | David Alejandro Espinoza Largaespada         | Coordinador y desarrollador |
+
+Proyecto desarrollado como parte de trabajo académico en la **Universidad Americana (UAM)**, orientado a resolver una necesidad real de gestión en la cafetería/pastelería **Dulce Patria**.
+
+---
